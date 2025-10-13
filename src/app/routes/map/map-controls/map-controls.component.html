@@ -1,0 +1,21 @@
+<div class="flex flex-wrap items-center gap-4">
+  <div>
+    <label class="text-sm text-gray-600">Station:</label>
+    <select class="ml-2 border rounded px-2 py-1" (change)="onStationSelect($event)">
+      <option [value]="null">All stations</option>
+
+      @for (station of stations(); track station.stationid) {
+        <option [value]="station.stationid">{{ station.stationname }}</option>
+      }
+    </select>
+  </div>
+
+  <div>
+    <label class="text-sm text-gray-600">Visualization:</label>
+    <select class="ml-2 border rounded px-2 py-1" (change)="onVisualizationTypeSelect($event)">
+      <option value="temperature">Temperature</option>
+      <option value="wind">Wind speed</option>
+      <option value="pressure">Air pressure</option>
+    </select>
+  </div>
+</div>
