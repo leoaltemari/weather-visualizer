@@ -1,0 +1,42 @@
+$spacings:
+  '0' 0px,
+  '1' 4px,
+  '2' 8px,
+  '3' 16px,
+  '4' 24px,
+  '5' 48px;
+
+$directions:
+  't' 'top',
+  'b' 'bottom',
+  'l' 'left',
+  'r' 'right';
+
+// Create spacing classes like m-1, p-1, mt-3, pb-3
+@each $order, $size in $spacings {
+  .m-#{$order} { margin: $size; }
+  .p-#{$order} { padding: $size; }
+
+  @each $dir, $dir-name in $directions {
+    .m#{$dir}-#{$order} { margin-#{$dir-name}: $size; }
+    .p#{$dir}-#{$order} { padding-#{$dir-name}: $size; }
+
+    .my-#{$order} {
+      margin-top: $size;
+      margin-bottom: $size;
+    }
+    .mx-#{$order} {
+      margin-left: $size;
+      margin-right: $size;
+    }
+
+    .py-#{$order} {
+      padding-top: $size;
+      padding-bottom: $size;
+    }
+    .px-#{$order} {
+      padding-left: $size;
+      padding-right: $size;
+    }
+  }
+}

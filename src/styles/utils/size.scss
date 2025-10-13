@@ -1,0 +1,11 @@
+$sizes:
+  25  25%,
+  50  50%,
+  75  75%,
+  100 100%;
+
+// Create class as w-25, w-50, w-75, w-100, h-25, h-50, h-75, h-100
+@each $size, $size-value in $sizes {
+  .w-#{$size} { width:  $size-value !important; }
+  .h-#{$size} { height: $size-value !important; }
+}
