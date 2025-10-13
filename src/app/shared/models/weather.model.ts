@@ -1,7 +1,7 @@
 export const VisualizationType = {
   temperature: 'temperature',
-  pressure: 'pressure',
   wind: 'wind',
+  pressure: 'pressure',
 } as const;
 
 export type VisualizationType = (typeof VisualizationType)[keyof typeof VisualizationType];

@@ -36,7 +36,7 @@ export class MapService {
 
       const popupHTML = `
         <strong>${station.stationname}</strong><br>
-        ${visualizationType}: ${valueWithUnit ?? 'N/A'}
+        ${visualizationType}: ${value ? valueWithUnit : 'N/A'}
       `;
 
       const marker = Leaflet.circleMarker(
