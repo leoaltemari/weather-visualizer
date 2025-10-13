@@ -1,10 +1,14 @@
 import { Injectable } from '@angular/core';
 
 import { DEFAULT_MAP_OPTIONS, MAX_MAP_ZOOM } from '@constants/map.constant';
-import { TEMPERATURE_COLORS, WIND_COLORS } from '@constants/weather.constant';
 import { Station } from '@models/buienradar-api.model';
 import { MapOptions, Position } from '@models/map.model';
 import { VisualizationType } from '@models/weather.model';
+import {
+  getColorByVisualizationType,
+  getStationValue,
+  getStationValueWithUnit,
+} from '@utils/weather.util';
 
 import * as Leaflet from 'leaflet';
 
@@ -26,11 +30,13 @@ export class MapService {
     this.markers.clearLayers();
 
     stations.forEach((station) => {
-      const value = this.getStationValue(visualizationType, station);
-      const color = this.getColorByVisualizationType(visualizationType, value);
+      const valueWithUnit = getStationValueWithUnit(visualizationType, station);
+      const value = getStationValue(visualizationType, station);
+      const color = getColorByVisualizationType(visualizationType, value);
+
       const popupHTML = `
         <strong>${station.stationname}</strong><br>
-        ${visualizationType}: ${value ?? 'N/A'}
+        ${visualizationType}: ${valueWithUnit ?? 'N/A'}
       `;
 
       const marker = Leaflet.circleMarker(
@@ -70,41 +76,6 @@ export class MapService {
       [DEFAULT_MAP_OPTIONS.center[0], DEFAULT_MAP_OPTIONS.center[1]],
       DEFAULT_MAP_OPTIONS.zoom,
     );
-  }
-
-  private getStationValue(type: VisualizationType, station: Station): number | null {
-    const valueByType = {
-      [VisualizationType.temperature]: station.temperature,
-      [VisualizationType.wind]: station.windspeed,
-      [VisualizationType.pressure]: station.airpressure,
-    } as const;
-
-    return valueByType[type] ?? null;
-  }
-
-  private getColorByVisualizationType(type: VisualizationType, value: number | null): string {
-    const getTemperatureColor = (temperature: number | null): string => {
-      if (!temperature && temperature !== 0) return TEMPERATURE_COLORS.NONE;
-      if (temperature > 20) return TEMPERATURE_COLORS.HOT;
-      if (temperature > 10) return TEMPERATURE_COLORS.MILD;
-      return TEMPERATURE_COLORS.COLD;
-    };
-
-    const getWindColor = (wind: number | null): string => {
-      if (!wind && wind !== 0) return WIND_COLORS.NONE;
-
-      return wind > 10 ? WIND_COLORS.STRONG : WIND_COLORS.LIGHT;
-    };
-
-    switch (type) {
-      case VisualizationType.temperature:
-        return getTemperatureColor(value);
-      case VisualizationType.wind:
-        return getWindColor(value);
-      case VisualizationType.pressure:
-      default:
-        return '#84cc16';
-    }
   }
 
   private getMarkerOptions(color: string): Leaflet.CircleMarkerOptions {
