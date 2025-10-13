@@ -1,8 +1,16 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
-  // {
-  //   path: '',
-  //   loadComponent: () => import('./routes/main/main.component').then((m) => m.MainComponent),
-  // },
+  {
+    path: 'weather-dashboard',
+    loadComponent: () =>
+      import('./routes/weather-dashboard/weather-dashboard.component').then(
+        (m) => m.WeatherDashboardComponent,
+      ),
+  },
+  {
+    path: '',
+    redirectTo: 'weather-dashboard',
+    pathMatch: 'full',
+  },
 ];
