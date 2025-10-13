@@ -1,22 +1,29 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 import { MapControlService } from '@services/map-control.service';
 import { MapService } from '@services/map.service';
 import { WeatherService } from '@services/weather.service';
 
-import { MapControlsComponent } from './map-controls/map-controls.component';
-import { MapViewComponent } from './map-view/map-view.component';
-
 @Component({
   selector: 'app-map',
   standalone: true,
-  providers: [WeatherService, MapControlService, MapService],
-  imports: [CommonModule, MapViewComponent, MapControlsComponent],
+  imports: [CommonModule],
   templateUrl: './map.component.html',
 })
 export class MapComponent {
-  readonly weatherService = inject(WeatherService);
+  private readonly mapControlService = inject(MapControlService);
+  private readonly mapService = inject(MapService);
+  private readonly weatherService = inject(WeatherService);
 
-  readonly stations$ = this.weatherService.getStationsData();
+  private readonly stations = toSignal(this.weatherService.stations$);
+  readonly selectecVisualizationType = toSignal(
+    this.mapControlService.visualizationTypeObservable$,
+  );
+
+  ngAfterViewInit(): void {
+    this.mapService.createMap();
+    this.mapService.updateMarkers(this.stations()!, this.selectecVisualizationType()!);
+  }
 }
