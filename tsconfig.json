@@ -25,11 +25,11 @@
     ],
     "baseUrl": "./src",
     "paths": {
-      "@models": ["app/shared/models/index"],
+      "@models/*": ["app/shared/models/*"],
       "@components/*": ["app/shared/components/*"],
-      "@services": ["app/core/services/index"],
-      "@constants": ["app/shared/constants/index"],
-      "@utils": ["app/shared/utils/index"],
+      "@services/*": ["app/core/services/*"],
+      "@constants/*": ["app/shared/constants/*"],
+      "@utils/*": ["app/shared/utils/*"],
       "@env": ["app/src/environments"],
     }
   },

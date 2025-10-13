@@ -7,7 +7,17 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "scss"
+          "style": "scss",
+          "flat": false
+        },
+        "@schematics/angular:directive": {
+          "flat": false
+        },
+        "@schematics/angular:service": {
+          "flat": false
+        },
+        "@schematics/angular:pipe": {
+          "flat": false
         }
       },
       "root": "",
@@ -25,9 +35,14 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "**/*",
+                "input": "./node_modules/leaflet/dist/images",
+                "output": "assets/"
               }
             ],
-            "styles": ["src/styles.scss"]
+            "styles": ["src/styles.scss", "./node_modules/leaflet/dist/leaflet.css"]
           },
           "configurations": {
             "production": {
@@ -78,9 +93,14 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "**/*",
+                "input": "./node_modules/leaflet/dist/images",
+                "output": "assets/"
               }
             ],
-            "styles": ["src/styles.scss"]
+            "styles": ["src/styles.scss", "./node_modules/leaflet/dist/leaflet.css"]
           }
         }
       }
