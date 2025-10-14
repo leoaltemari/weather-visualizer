@@ -1,21 +1,56 @@
-<div class="flex flex-wrap items-center gap-4">
-  <div>
-    <label class="text-sm text-gray-600">Station:</label>
-    <select class="ml-2 border rounded px-2 py-1" (change)="onStationSelect($event)">
-      <option [value]="null">All stations</option>
+<div
+  class="bg-white/80 backdrop-blur-sm p-4 rounded-xl shadow-lg flex flex-wrap items-center gap-x-6 gap-y-4"
+>
+  <div class="flex items-center gap-x-6 gap-y-4 flex-wrap">
+    <div class="flex items-center gap-2">
+      <label for="station-select" class="text-sm font-medium text-gray-800">Station</label>
+      <select
+        id="station-select"
+        class="block rounded-md border-gray-300 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+        (change)="onStationSelect($event)"
+        [(ngModel)]="selectedStation"
+      >
+        <option [value]="null">All stations</option>
 
-      @for (station of stations(); track station.stationid) {
-        <option [value]="station.stationid">{{ station.stationname }}</option>
-      }
-    </select>
+        @for (station of stations(); track station.stationid) {
+          <option [value]="station.stationid">{{ station.stationname }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <label for="visualization-select" class="text-sm font-medium text-gray-800">
+        Visualization
+      </label>
+      <select
+        id="visualization-select"
+        class="block rounded-md border-gray-300 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+        (change)="onVisualizationTypeSelect($event)"
+        [(ngModel)]="selectedVisualization"
+      >
+        <option value="temperature">Temperature</option>
+        <option value="wind">Wind speed</option>
+        <option value="pressure">Air pressure</option>
+      </select>
+    </div>
   </div>
 
-  <div>
-    <label class="text-sm text-gray-600">Visualization:</label>
-    <select class="ml-2 border rounded px-2 py-1" (change)="onVisualizationTypeSelect($event)">
-      <option value="temperature">Temperature</option>
-      <option value="wind">Wind speed</option>
-      <option value="pressure">Air pressure</option>
-    </select>
+  <div class="ml-auto flex items-center gap-5">
+    <button
+      type="button"
+      class="cursor-pointer p-2 rounded-full text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+      (click)="onRefresh()"
+    >
+      <span class="sr-only">Refresh data</span>
+      <img src="images/icons/refresh.png" [class.animate-spin]="isRefreshing" class="h-5 w-5" />
+    </button>
+
+    <button
+      type="button"
+      class="cursor-pointer rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+      (click)="onReset()"
+    >
+      Reset
+    </button>
   </div>
 </div>

@@ -1,12 +1,13 @@
 @if (stations$ | async) {
-  <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-5 md:px-4 py-[48px] h-full">
-    <section class="rounded-2xl shadow-lg p-[24px] bg-white">
-      <app-map-controls></app-map-controls>
-    </section>
-    <section class="rounded-2xl shadow-lg bg-white">
-      <app-map></app-map>
-    </section>
+  <div class="container mx-auto flex flex-col gap-[24px] md:px-4 py-[48px] h-full">
+    <app-map-controls class="rounded-2xl md:col-span-2"></app-map-controls>
 
-    <section class="rounded-2xl shadow-lg p-2 col-span-1 md:col-span-2 bg-white"></section>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-[24px] flex-grow">
+      <section class="rounded-2xl shadow-md p-[24px] bg-white"></section>
+
+      <app-map class="rounded-2xl shadow-md bg-white"></app-map>
+
+      <section class="rounded-2xl shadow-md p-2 md:col-span-2 p-[24px] bg-white"></section>
+    </div>
   </div>
 }

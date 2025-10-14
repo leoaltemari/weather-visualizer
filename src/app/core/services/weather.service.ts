@@ -11,7 +11,7 @@ export class WeatherService {
   private readonly http = inject(HttpClient);
 
   private readonly WEATHER_API_URL = environment.buienradarUrl;
-  private readonly REFRESH_INTERVAL = 30 * 1000; // 30 seconds
+  private readonly REFRESH_INTERVAL = 600 * 1000; // 30 seconds
 
   private readonly _stations$ = new BehaviorSubject<Station[]>([]);
   readonly stations$ = this._stations$.asObservable();

@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, model } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { FOCUS_MAP_ZOOM } from '@constants/map.constant';
+import { Station } from '@models/buienradar-api.model';
 import { Position } from '@models/map.model';
 import { VisualizationType } from '@models/weather.model';
 import { MapControlService } from '@services/map-control.service';
@@ -12,7 +14,7 @@ import { WeatherService } from '@services/weather.service';
 @Component({
   selector: 'app-map-controls',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './map-controls.component.html',
 })
 export class MapControlsComponent {
@@ -21,6 +23,11 @@ export class MapControlsComponent {
   private readonly mapService = inject(MapService);
 
   readonly stations = toSignal(this.weatherService.stations$);
+
+  readonly selectedStation = model<Station | null>(null);
+  readonly selectedVisualization = model<VisualizationType>(VisualizationType.temperature);
+
+  isRefreshing = false;
 
   onStationSelect(selectEvent: Event): void {
     const id = +(selectEvent.target as HTMLSelectElement).value;
@@ -40,10 +47,28 @@ export class MapControlsComponent {
   }
 
   onVisualizationTypeSelect(selectEvent: Event): void {
-    const type = (selectEvent.target as HTMLSelectElement).value as VisualizationType;
+    const type =
+      ((selectEvent.target as HTMLSelectElement).value as VisualizationType) ??
+      VisualizationType.temperature;
 
     this.mapControlService.setVisualizationType(type);
 
     this.mapService.updateMarkers(this.stations()!, type);
+  }
+
+  onReset(): void {
+    this.selectedStation.set(null);
+    this.selectedVisualization.set(VisualizationType.temperature);
+    this.mapService.resetMap();
+    this.mapService.updateMarkers(this.stations()!, VisualizationType.temperature);
+  }
+
+  onRefresh(): void {
+    if (this.isRefreshing) return;
+
+    this.isRefreshing = true;
+    setTimeout(() => (this.isRefreshing = false), 1000);
+
+    this.weatherService.getRealTimeStationData().subscribe();
   }
 }
