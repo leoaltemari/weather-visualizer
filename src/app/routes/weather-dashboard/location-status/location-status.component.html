@@ -1,11 +1,11 @@
-<article class="grid grid-cols-2 gap-[16px]">
+<article class="flex flex-wrap justify-center align-center gap-x-[16px]">
   <div class="flex flex-col justify-between">
     <div class="flex items-center bg-white rounded-full px-4 py-2 shadow-sm w-full">
       <img src="images/icons/location.png" alt="Location Icon" class="h-6 w-6 mr-2 text-gray-500" />
       <span class="font-medium text-gray-700">{{ selectedStation()?.stationname }}</span>
     </div>
 
-    <div>
+    <div class="my-4">
       <p class="mb-2 text-2xl font-semibold tracking-wider text-blue-950">
         {{ selectedStation()?.weatherdescription }}
       </p>
