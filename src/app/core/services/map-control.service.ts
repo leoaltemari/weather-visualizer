@@ -10,16 +10,16 @@ export class MapControlService {
   private readonly _selectedStation$ = new BehaviorSubject<Station | null>(null);
   readonly selectedStation$ = this._selectedStation$.asObservable();
 
-  private readonly visualizationType$ = new BehaviorSubject<VisualizationType>(
+  private readonly _visualizationType$ = new BehaviorSubject<VisualizationType>(
     VisualizationType.temperature,
   );
-  readonly visualizationTypeObservable$ = this.visualizationType$.asObservable();
+  readonly visualizationType$ = this._visualizationType$.asObservable();
 
   public setSelectedStation(station: Station | null): void {
     this._selectedStation$.next(station);
   }
 
   public setVisualizationType(type: VisualizationType): void {
-    this.visualizationType$.next(type);
+    this._visualizationType$.next(type);
   }
 }

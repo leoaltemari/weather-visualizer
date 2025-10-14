@@ -8,7 +8,7 @@
         id="station-select"
         class="block rounded-md border-gray-300 py-1.5 pl-3 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
         (change)="onStationSelect($event)"
-        [(ngModel)]="selectedStation"
+        [value]="selectedStation()?.stationid"
       >
         <option [value]="null">All stations</option>
 
@@ -26,7 +26,7 @@
         id="visualization-select"
         class="block rounded-md border-gray-300 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
         (change)="onVisualizationTypeSelect($event)"
-        [(ngModel)]="selectedVisualization"
+        [value]="selectedVisualizationType()"
       >
         <option value="temperature">Temperature</option>
         <option value="wind">Wind speed</option>
@@ -42,7 +42,11 @@
       (click)="onRefresh()"
     >
       <span class="sr-only">Refresh data</span>
-      <img src="images/icons/refresh.png" [class.animate-spin]="isRefreshing" class="h-5 w-5" />
+      <img
+        src="images/icons/refresh.png"
+        [style.animation]="isRefreshing() ? 'spin 1s linear infinite reverse' : 'none'"
+        class="h-5 w-5"
+      />
     </button>
 
     <button

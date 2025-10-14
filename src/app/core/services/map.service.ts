@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
-import { DEFAULT_MAP_OPTIONS, MAX_MAP_ZOOM } from '@constants/map.constant';
+import { DEFAULT_MAP_OPTIONS, FOCUS_MAP_ZOOM, MAX_MAP_ZOOM } from '@constants/map.constant';
 import { Station } from '@models/buienradar-api.model';
 import { MapOptions, Position } from '@models/map.model';
 import { VisualizationType } from '@models/weather.model';
@@ -12,8 +12,12 @@ import {
 
 import * as Leaflet from 'leaflet';
 
+import { MapControlService } from './map-control.service';
+
 @Injectable()
 export class MapService {
+  private readonly mapControlService = inject(MapControlService);
+
   private map!: Leaflet.Map;
   private markers: Leaflet.LayerGroup = Leaflet.layerGroup();
 
@@ -39,10 +43,12 @@ export class MapService {
         ${visualizationType}: ${value ? valueWithUnit : 'N/A'}
       `;
 
-      const marker = Leaflet.circleMarker(
-        [station.lat, station.lon],
-        this.getMarkerOptions(color),
-      ).bindPopup(popupHTML);
+      const marker = Leaflet.circleMarker([station.lat, station.lon], this.getMarkerOptions(color))
+        .bindPopup(popupHTML)
+        .on('click', () => {
+          this.mapControlService.setSelectedStation(station);
+          this.flyTo([station.lat, station.lon], FOCUS_MAP_ZOOM);
+        });
 
       this.markers.addLayer(marker);
     });

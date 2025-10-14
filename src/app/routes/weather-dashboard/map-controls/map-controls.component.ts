@@ -1,10 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, model } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { FOCUS_MAP_ZOOM } from '@constants/map.constant';
-import { Station } from '@models/buienradar-api.model';
 import { Position } from '@models/map.model';
 import { VisualizationType } from '@models/weather.model';
 import { MapControlService } from '@services/map-control.service';
@@ -14,7 +12,7 @@ import { WeatherService } from '@services/weather.service';
 @Component({
   selector: 'app-map-controls',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule],
   templateUrl: './map-controls.component.html',
 })
 export class MapControlsComponent {
@@ -23,11 +21,10 @@ export class MapControlsComponent {
   private readonly mapService = inject(MapService);
 
   readonly stations = toSignal(this.weatherService.stations$);
+  readonly selectedStation = toSignal(this.mapControlService.selectedStation$);
+  readonly selectedVisualizationType = toSignal(this.mapControlService.visualizationType$);
 
-  readonly selectedStation = model<Station | null>(null);
-  readonly selectedVisualization = model<VisualizationType>(VisualizationType.temperature);
-
-  isRefreshing = false;
+  readonly isRefreshing = signal(false);
 
   onStationSelect(selectEvent: Event): void {
     const id = +(selectEvent.target as HTMLSelectElement).value;
@@ -47,9 +44,7 @@ export class MapControlsComponent {
   }
 
   onVisualizationTypeSelect(selectEvent: Event): void {
-    const type =
-      ((selectEvent.target as HTMLSelectElement).value as VisualizationType) ??
-      VisualizationType.temperature;
+    const type = (selectEvent.target as HTMLSelectElement).value as VisualizationType;
 
     this.mapControlService.setVisualizationType(type);
 
@@ -57,10 +52,7 @@ export class MapControlsComponent {
   }
 
   onReset(): void {
-    this.selectedStation.set(null);
     this.mapControlService.setSelectedStation(null);
-
-    this.selectedVisualization.set(VisualizationType.temperature);
     this.mapControlService.setVisualizationType(VisualizationType.temperature);
 
     this.mapService.resetMap();
@@ -68,10 +60,10 @@ export class MapControlsComponent {
   }
 
   onRefresh(): void {
-    if (this.isRefreshing) return;
+    if (this.isRefreshing()) return;
 
-    this.isRefreshing = true;
-    setTimeout(() => (this.isRefreshing = false), 1000);
+    this.isRefreshing.set(true);
+    setTimeout(() => this.isRefreshing.set(false), 1000);
 
     this.weatherService.getStationsData().subscribe();
   }

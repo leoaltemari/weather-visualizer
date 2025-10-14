@@ -19,9 +19,7 @@ export class MapComponent {
   private readonly weatherService = inject(WeatherService);
 
   private readonly stations = toSignal(this.weatherService.stations$);
-  readonly selectecVisualizationType = toSignal(
-    this.mapControlService.visualizationTypeObservable$,
-  );
+  readonly selectecVisualizationType = toSignal(this.mapControlService.visualizationType$);
 
   ngAfterViewInit(): void {
     this.mapService.createMap();
