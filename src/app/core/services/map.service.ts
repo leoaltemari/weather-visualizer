@@ -18,15 +18,18 @@ import { MapControlService } from './map-control.service';
 export class MapService {
   private readonly mapControlService = inject(MapControlService);
 
+  private readonly tileLayerUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+  private readonly tileLayerAttribution = `© OpenStreetMap contributors`;
+
   private map!: Leaflet.Map;
   private markers: Leaflet.LayerGroup = Leaflet.layerGroup();
 
   public createMap(options: MapOptions = DEFAULT_MAP_OPTIONS): void {
     this.map = Leaflet.map('map').setView(options.center, options.zoom);
 
-    Leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    Leaflet.tileLayer(this.tileLayerUrl, {
+      attribution: this.tileLayerAttribution,
       maxZoom: MAX_MAP_ZOOM,
-      attribution: '© OpenStreetMap contributors',
     }).addTo(this.map);
   }
 
@@ -38,12 +41,11 @@ export class MapService {
       const value = getStationValue(visualizationType, station);
       const color = getColorByVisualizationType(visualizationType, value);
 
-      const popupHTML = `
-        <strong>${station.stationname}</strong><br>
-        ${visualizationType}: ${value ? valueWithUnit : 'N/A'}
-      `;
+      const popupHTML = this.getPopupContent(station);
 
-      const marker = Leaflet.circleMarker([station.lat, station.lon], this.getMarkerOptions(color))
+      const marker = Leaflet.marker([station.lat, station.lon], {
+        icon: this.getMarkerOptions(station.fullIconUrl, color, value ? valueWithUnit : 'N/A'),
+      })
         .bindPopup(popupHTML)
         .on('click', () => {
           this.mapControlService.setSelectedStation(station);
@@ -84,14 +86,34 @@ export class MapService {
     );
   }
 
-  private getMarkerOptions(color: string): Leaflet.CircleMarkerOptions {
-    return {
-      radius: 8,
-      fillColor: color,
-      color: '#000',
-      weight: 1,
-      opacity: 0.8,
-      fillOpacity: 0.8,
-    };
+  private getPopupContent(station: Station): string {
+    return `
+      <span class="font-bold">${station.stationname}</span>
+
+      <div class="flex flex-col mt-2">
+        <span>Temperature: <strong>${station.temperature ?? '--'} °C</strong></span>
+        <span>Humidity: <strong>${station.humidity ?? '--'} %</strong></span>
+        <span>Wind Speed: <strong>${station.windspeed ?? '--'} km/h</strong></span>
+        <span>Rainfall (1h): <strong>${station.rainFallLastHour ?? '--'} mm</strong></span>
+        <span>Rainfall (24h): <strong>${station.rainFallLast24Hour ?? '--'} mm</strong></span>
+      </div>
+    `;
+  }
+
+  private getMarkerOptions(iconUrl: string, color: string, value: string | number | null) {
+    return Leaflet.divIcon({
+      className: '',
+      html: `
+        <div class="flex flex-col items-center">
+          <img src="${iconUrl}" alt="Station Icon" style="width: 50px !important" />
+
+          <div class="flex items-center justify-center -mt-2">
+            <div class="w-3 h-3 rounded-full border border-grey-600" style="background-color: ${color}"></div>
+            <p class="text-center font-bold text-xs ml-1">${value}</p>
+          </div>
+        </div>
+      `,
+      iconSize: [100, 60],
+    });
   }
 }
