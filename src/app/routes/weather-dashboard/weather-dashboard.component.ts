@@ -18,5 +18,5 @@ import { MapComponent } from './map/map.component';
 export class WeatherDashboardComponent {
   readonly weatherService = inject(WeatherService);
 
-  readonly stations$ = this.weatherService.getStationsData();
+  readonly stations$ = this.weatherService.getRealTimeStationData();
 }
