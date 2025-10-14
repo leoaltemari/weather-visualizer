@@ -3,12 +3,12 @@ import { Injectable } from '@angular/core';
 import { Station } from '@models/buienradar-api.model';
 import { VisualizationType } from '@models/weather.model';
 
-import { BehaviorSubject, filter } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
 export class MapControlService {
   private readonly _selectedStation$ = new BehaviorSubject<Station | null>(null);
-  readonly selectedStation$ = this._selectedStation$.asObservable().pipe(filter((s) => !!s));
+  readonly selectedStation$ = this._selectedStation$.asObservable();
 
   private readonly visualizationType$ = new BehaviorSubject<VisualizationType>(
     VisualizationType.temperature,

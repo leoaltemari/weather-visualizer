@@ -58,7 +58,11 @@ export class MapControlsComponent {
 
   onReset(): void {
     this.selectedStation.set(null);
+    this.mapControlService.setSelectedStation(null);
+
     this.selectedVisualization.set(VisualizationType.temperature);
+    this.mapControlService.setVisualizationType(VisualizationType.temperature);
+
     this.mapService.resetMap();
     this.mapService.updateMarkers(this.stations()!, VisualizationType.temperature);
   }

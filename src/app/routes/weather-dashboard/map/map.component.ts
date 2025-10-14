@@ -10,7 +10,7 @@ import { WeatherService } from '@services/weather.service';
   selector: 'app-map',
   standalone: true,
   imports: [CommonModule],
-  template: `<div id="map" class="rounded-2xl" style="height: 100%; width: 100%"></div>`,
+  template: `<article id="map" class="rounded-2xl" style="height: 100%; width: 100%"></article>`,
 })
 export class MapComponent {
   private readonly mapControlService = inject(MapControlService);
