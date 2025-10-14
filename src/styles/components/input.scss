@@ -1,17 +1,29 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 @layer components {
-  label {
-    @apply text-sm font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2;
+  .custom-input {
+    @apply flex flex-col gap-1 w-full md:w-auto;
+
+    label {
+      @apply text-sm font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2;
+    }
+    select {
+      @apply rounded-xl border-1 border-gray-600 bg-gray-700/80 py-2.5 pl-4 pr-10 text-gray-100
+              focus:outline-none sm:text-sm font-medium transition-all duration-300
+              hover:border-blue-500 cursor-pointer w-full;
+    }
   }
-  select {
-    @apply rounded-xl border-1 border-gray-600 bg-gray-700/80 py-2.5 pl-4 pr-10 text-gray-100
-           focus:outline-none sm:text-sm font-medium transition-all duration-300
-           hover:border-blue-500 cursor-pointer w-full;
-  }
+
   button {
-    @apply cursor-pointer p-3 rounded-xl bg-blue-500 text-gray-200 hover:bg-blue-800/70 transition-all duration-400 focus:outline-none shadow-md;
+    @apply cursor-pointer p-3 rounded-xl bg-blue-500 text-gray-200 hover:bg-blue-800/70 transition-all
+            duration-400 focus:outline-none focus:ring-1 focus:ring-white shadow-md;
+  }
+
+  .custom-card {
+    @apply relative bg-gray-800/90 backdrop-blur-xl rounded-2xl px-3 sm:px-4 py-3 sm:py-2 shadow-xl border-1
+            border-blue-500 group-hover:border-blue-500 transition-colors duration-500;
+  }
+
+  .number-card {
+    @apply flex items-center gap-3 sm:gap-4 px-3 sm:px-4 py-2 rounded-xl backdrop-blur-sm w-full sm:w-auto
+            justify-evenly;
   }
 }

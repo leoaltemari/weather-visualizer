@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
   selector: 'app-root',
   standalone: true,
   template: `
-    <main class="h-screen" style="background-color: #26323d;">
+    <main class="min-h-screen" style="background-color: #26323d;">
       <router-outlet></router-outlet>
     </main>
   `,

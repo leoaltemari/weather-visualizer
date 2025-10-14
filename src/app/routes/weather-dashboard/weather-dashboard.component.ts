@@ -5,6 +5,7 @@ import { MapControlService } from '@services/map-control.service';
 import { MapService } from '@services/map.service';
 import { WeatherService } from '@services/weather.service';
 
+import { ForecastComponent } from './forecast/forecast.component';
 import { LocationStatusComponent } from './location-status/location-status.component';
 import { MapControlsComponent } from './map-controls/map-controls.component';
 import { MapComponent } from './map/map.component';
@@ -13,7 +14,13 @@ import { MapComponent } from './map/map.component';
   selector: 'app-weather-dashboard',
   standalone: true,
   providers: [WeatherService, MapControlService, MapService],
-  imports: [CommonModule, MapComponent, MapControlsComponent, LocationStatusComponent],
+  imports: [
+    CommonModule,
+    MapComponent,
+    MapControlsComponent,
+    LocationStatusComponent,
+    ForecastComponent,
+  ],
   templateUrl: './weather-dashboard.component.html',
 })
 export class WeatherDashboardComponent implements OnDestroy {

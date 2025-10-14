@@ -28,9 +28,22 @@ export class WeatherService {
 
   private _enablePooling = true;
 
+  public getWeatherData(): Observable<BuienradarApiResponse> {
+    return this.http.get<BuienradarApiResponse>(this.WEATHER_API_URL).pipe(retry(3));
+  }
+
+  public getRealTimeWeatherData(
+    refreshIntervalMs = this.REFRESH_INTERVAL,
+  ): Observable<BuienradarApiResponse> {
+    return timer(0, refreshIntervalMs).pipe(
+      takeWhile(() => this._enablePooling),
+      switchMap(() => this.getWeatherData()),
+      shareReplay(1),
+    );
+  }
+
   public getStationsData(): Observable<Station[]> {
-    return this.http.get<BuienradarApiResponse>(this.WEATHER_API_URL).pipe(
-      retry(3),
+    return this.getWeatherData().pipe(
       map((data) => data.actual.stationmeasurements ?? []),
       tap((stations) => this._stations$.next(stations)),
     );
