@@ -6,7 +6,7 @@
     </div>
 
     <div class="my-4">
-      <p class="mb-2 text-2xl font-semibold tracking-wider text-blue-950">
+      <p class="mb-2 text-2xl font-semibold tracking-wider text-blue-950 max-w-[320px]">
         {{ selectedStation()?.weatherdescription }}
       </p>
       <span class="text-sm text-gray-500">
@@ -28,7 +28,7 @@
     <img
       [src]="selectedStation()?.fullIconUrl ?? 'images/icons/weather-default.png'"
       alt="Weather Icon"
-      class="h-[256px] w-[256px] mx-auto"
+      class="h-[200px] w-[200px] mx-auto"
     />
 
     <div class="flex justify-center gap-[24px] mt-4">
