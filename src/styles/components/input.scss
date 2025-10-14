@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  label {
+    @apply text-sm font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2;
+  }
+  select {
+    @apply rounded-xl border-1 border-gray-600 bg-gray-700/80 py-2.5 pl-4 pr-10 text-gray-100
+           focus:outline-none sm:text-sm font-medium transition-all duration-300
+           hover:border-blue-500 cursor-pointer w-full;
+  }
+  button {
+    @apply cursor-pointer p-3 rounded-xl bg-blue-500 text-gray-200 hover:bg-blue-800/70 transition-all duration-400 focus:outline-none shadow-md;
+  }
+}
