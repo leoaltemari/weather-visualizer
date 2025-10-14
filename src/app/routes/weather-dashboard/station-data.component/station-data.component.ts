@@ -5,15 +5,15 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { MapControlService } from '@services/map-control.service';
 
 @Component({
-  selector: 'app-location-status',
+  selector: 'app-station-data',
   standalone: true,
   host: {
-    class: `rounded-2xl bg-cover bg-center bg-[url('/images/backgrounds/weather-default.png')]`,
+    class: `bg-gray-800/90 backdrop-blur-xl rounded-2xl px-6 py-5 shadow-xl border-1 border-blue-500 h-full`,
   },
   imports: [CommonModule],
-  templateUrl: './location-status.component.html',
+  templateUrl: './station-data.component.html',
 })
-export class LocationStatusComponent {
+export class StationDataComponent {
   private readonly mapControlService = inject(MapControlService);
 
   readonly selectedStation = toSignal(this.mapControlService.selectedStation$);

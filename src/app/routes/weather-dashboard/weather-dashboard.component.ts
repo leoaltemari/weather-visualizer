@@ -6,9 +6,9 @@ import { MapService } from '@services/map.service';
 import { WeatherService } from '@services/weather.service';
 
 import { ForecastComponent } from './forecast/forecast.component';
-import { LocationStatusComponent } from './location-status/location-status.component';
 import { MapControlsComponent } from './map-controls/map-controls.component';
 import { MapComponent } from './map/map.component';
+import { StationDataComponent } from './station-data.component/station-data.component';
 
 @Component({
   selector: 'app-weather-dashboard',
@@ -18,9 +18,12 @@ import { MapComponent } from './map/map.component';
     CommonModule,
     MapComponent,
     MapControlsComponent,
-    LocationStatusComponent,
+    StationDataComponent,
     ForecastComponent,
   ],
+  host: {
+    class: 'container mx-auto flex flex-col gap-[24px] md:px-4 py-[32px] h-full',
+  },
   templateUrl: './weather-dashboard.component.html',
 })
 export class WeatherDashboardComponent implements OnDestroy {
