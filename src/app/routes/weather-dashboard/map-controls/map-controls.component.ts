@@ -73,6 +73,6 @@ export class MapControlsComponent {
     this.isRefreshing = true;
     setTimeout(() => (this.isRefreshing = false), 1000);
 
-    this.weatherService.getRealTimeStationData().subscribe();
+    this.weatherService.getStationsData().subscribe();
   }
 }
