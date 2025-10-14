@@ -10,7 +10,9 @@ import { WeatherService } from '@services/weather.service';
   selector: 'app-map',
   standalone: true,
   imports: [CommonModule],
-  host: { class: 'min-h-[400px]' },
+  host: {
+    class: 'bg-gray-800/90 rounded-2xl shadow-xl border-1 border-blue-500 h-full',
+  },
   template: `<article id="map" class="rounded-2xl" style="height: 100%; width: 100%"></article>`,
 })
 export class MapComponent {

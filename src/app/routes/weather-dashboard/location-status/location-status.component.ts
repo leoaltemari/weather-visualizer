@@ -8,7 +8,7 @@ import { MapControlService } from '@services/map-control.service';
   selector: 'app-location-status',
   standalone: true,
   host: {
-    class: `p-[24px] h-full bg-cover bg-center bg-[url('/images/backgrounds/weather-default.png')]`,
+    class: `rounded-2xl bg-cover bg-center bg-[url('/images/backgrounds/weather-default.png')]`,
   },
   imports: [CommonModule],
   templateUrl: './location-status.component.html',
