@@ -1,0 +1,6 @@
+@layer components {
+  button {
+    @apply cursor-pointer p-3 rounded-xl bg-blue-500 text-gray-200 hover:bg-blue-800/70 transition-all
+            duration-400 focus:outline-none focus:ring-1 focus:ring-white shadow-md;
+  }
+}

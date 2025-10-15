@@ -11,19 +11,4 @@
               hover:border-blue-500 cursor-pointer w-full;
     }
   }
-
-  button {
-    @apply cursor-pointer p-3 rounded-xl bg-blue-500 text-gray-200 hover:bg-blue-800/70 transition-all
-            duration-400 focus:outline-none focus:ring-1 focus:ring-white shadow-md;
-  }
-
-  .custom-card {
-    @apply relative bg-gray-800/90 backdrop-blur-xl rounded-2xl px-3 sm:px-4 py-3 sm:py-2 shadow-xl border-1
-            border-blue-500 group-hover:border-blue-500 transition-colors duration-500;
-  }
-
-  .number-card {
-    @apply flex items-center gap-3 sm:gap-4 px-3 sm:px-4 py-2 rounded-xl backdrop-blur-sm w-full sm:w-auto
-            justify-evenly;
-  }
 }
