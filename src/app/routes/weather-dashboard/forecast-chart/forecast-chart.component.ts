@@ -20,7 +20,6 @@ import type {
   templateUrl: './forecast-chart.component.html',
   imports: [TitleComponent, LineChartComponent],
   host: { class: 'flex flex-col' },
-  styleUrl: './forecast-chart.component.scss',
   providers: [ChartService],
 })
 export class ForecastChartComponent {
