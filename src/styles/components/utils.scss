@@ -1,0 +1,5 @@
+@layer components {
+  hr.vertical-separator {
+    @apply w-px h-10 sm:h-12 bg-gradient-to-b from-transparent via-gray-600 to-transparent;
+  }
+}
