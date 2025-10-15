@@ -12,7 +12,7 @@
 
       <!-- Weather Description -->
       <div
-        class="bg-gray-700/40 backdrop-blur-sm rounded-2xl px-5 py-4 border-1 border-blue-500/20"
+        class="bg-gray-700/40 backdrop-blur-sm rounded-2xl px-5 py-3 border-1 border-blue-500/20"
       >
         <p class="mb-2 text-2xl font-bold text-gray-100">
           {{ selectedStation()?.weatherdescription }}
@@ -27,7 +27,7 @@
 
       <!-- Temperature Display -->
       <div
-        class="bg-gray-700/40 backdrop-blur-sm rounded-2xl px-5 py-5 border-1 border-blue-500/20"
+        class="bg-gray-700/40 backdrop-blur-sm rounded-2xl px-5 py-3 border-1 border-blue-500/20"
       >
         <p class="mb-3 text-7xl font-bold text-gray-100">
           {{ selectedStation()?.temperature ?? '--'
@@ -51,7 +51,7 @@
         <img
           [src]="selectedStation()?.fullIconUrl ?? 'images/icons/weather-default.png'"
           alt="Weather Icon"
-          class="relative h-[200px] w-[200px] object-contain drop-shadow-2xl transform group-hover:scale-105 transition-transform duration-500"
+          class="relative h-[180px] w-[200px] object-contain drop-shadow-2xl transform group-hover:scale-105 transition-transform duration-500"
         />
       </div>
 

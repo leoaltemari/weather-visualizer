@@ -1,3 +1,5 @@
+import { TooltipItem, TooltipModel } from 'chart.js';
+
 export type RgbColor = `rgb(${number},${number},${number})`;
 export type RgbaColor = `rgba(${number},${number},${number},${number | `${number}.${number}`})`;
 
@@ -19,3 +21,8 @@ export interface ShadowPluginOptions {
   blur?: number;
   offsetY?: number;
 }
+
+export type TooltipLabelCallback = (
+  this: TooltipModel<'line'>,
+  tooltipItem: TooltipItem<'line'>,
+) => string | string[] | void;

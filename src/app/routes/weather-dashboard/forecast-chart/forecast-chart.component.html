@@ -4,13 +4,9 @@
   subtitle="Weather outlook for the week ahead"
 ></app-title>
 
-<div
-  class="bg-gray-800/90 backdrop-blur-xl rounded-2xl px-6 py-5 shadow-xl border-1 border-blue-500 flex-1"
->
-  <p class="mb-2 text-xs text-gray-400">
-    Tip: Click the legend items to hide data you don't want to see.
-  </p>
-  <div class="h-64 sm:h-100">
-    <canvas #chartCanvas aria-label="Weekly temperature line chart" role="img"></canvas>
-  </div>
-</div>
+<app-line-chart
+  [scales]="chartScales"
+  [tooltipLabelCallback]="chartTooltipLabelCallback"
+  [datasets]="[maxTemperatureDataset(), minTemperatureDataset(), rainChanceDataset()]"
+  [labels]="labels()"
+></app-line-chart>
