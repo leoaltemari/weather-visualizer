@@ -8,7 +8,9 @@
   </div>
 </div>
 
-@for (item of forecast | async; track item.day; let last = $last) {
+@let forecast = forecastSignal();
+
+@for (item of forecast; track item.day; let last = $last) {
   <div class="group relative overflow-hidden rounded-2xl" [class.mb-3]="!last">
     <div class="custom-card">
       <div class="gradient-background"></div>

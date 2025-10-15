@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 
+import { environment } from '@env';
 import { BuienradarApiResponse, Station } from '@models/buienradar-api.model';
 
-import { environment } from 'environments/environment.prod';
 import {
   BehaviorSubject,
   map,
@@ -23,13 +23,27 @@ export class WeatherService {
   private readonly WEATHER_API_URL = environment.buienradarUrl;
   private readonly REFRESH_INTERVAL = 30 * 1000; // 30 seconds
 
-  private readonly _stations$ = new BehaviorSubject<Station[]>([]);
-  readonly stations$ = this._stations$.asObservable();
+  private readonly _weatherData$ = new BehaviorSubject<BuienradarApiResponse | null>(null);
 
+  readonly stations$ = this._weatherData$.pipe(
+    map((data) => data?.actual?.stationmeasurements ?? []),
+  );
+  readonly forecast$ = this._weatherData$.pipe(
+    map((data) => data?.forecast?.fivedayforecast ?? []),
+  );
+
+  /** Controls when the pooling must stop */
   private _enablePooling = true;
 
+  public stopPooling(): void {
+    this._enablePooling = false;
+  }
+
   public getWeatherData(): Observable<BuienradarApiResponse> {
-    return this.http.get<BuienradarApiResponse>(this.WEATHER_API_URL).pipe(retry(3));
+    return this.http.get<BuienradarApiResponse>(this.WEATHER_API_URL).pipe(
+      retry(3),
+      tap((data) => this._weatherData$.next(data)),
+    );
   }
 
   public getRealTimeWeatherData(
@@ -42,26 +56,9 @@ export class WeatherService {
     );
   }
 
-  public getStationsData(): Observable<Station[]> {
-    return this.getWeatherData().pipe(
-      map((data) => data.actual.stationmeasurements ?? []),
-      tap((stations) => this._stations$.next(stations)),
-    );
-  }
-
-  public getRealTimeStationData(refreshIntervalMs = this.REFRESH_INTERVAL): Observable<Station[]> {
-    return timer(0, refreshIntervalMs).pipe(
-      takeWhile(() => this._enablePooling),
-      switchMap(() => this.getStationsData()),
-      shareReplay(1),
-    );
-  }
-
-  public stopPooling(): void {
-    this._enablePooling = false;
-  }
-
   public getStationDataById(stationId: number): Station | null {
-    return this._stations$.value.find((station) => station.stationid === stationId) ?? null;
+    const stations = this._weatherData$.value?.actual?.stationmeasurements;
+
+    return stations?.find((station) => station.stationid === stationId) ?? null;
   }
 }

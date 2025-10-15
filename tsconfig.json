@@ -30,7 +30,7 @@
       "@services/*": ["app/core/services/*"],
       "@constants/*": ["app/shared/constants/*"],
       "@utils/*": ["app/shared/utils/*"],
-      "@env": ["app/src/environments"],
+      "@env": ["environments/environment"],
     }
   },
   "angularCompilerOptions": {

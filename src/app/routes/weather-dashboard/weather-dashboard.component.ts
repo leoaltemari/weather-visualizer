@@ -29,7 +29,7 @@ import { StationDataComponent } from './station-data.component/station-data.comp
 export class WeatherDashboardComponent implements OnDestroy {
   readonly weatherService = inject(WeatherService);
 
-  readonly stations$ = this.weatherService.getRealTimeStationData();
+  readonly weatherData$ = this.weatherService.getRealTimeWeatherData();
 
   ngOnDestroy(): void {
     this.weatherService.stopPooling();
