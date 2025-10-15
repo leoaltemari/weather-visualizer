@@ -14,7 +14,7 @@
       <div
         class="bg-gray-700/40 backdrop-blur-sm rounded-2xl px-5 py-4 border-1 border-blue-500/20"
       >
-        <p class="mb-2 text-2xl font-bold text-gray-100 max-w-[320px]">
+        <p class="mb-2 text-2xl font-bold text-gray-100">
           {{ selectedStation()?.weatherdescription }}
         </p>
         <div class="flex items-center gap-2">
@@ -90,13 +90,13 @@
   <!-- No-selection message -->
   <div class="flex items-center justify-center w-full h-full min-h-[240px] p-6">
     <div
-      class="w-full max-w-[640px] bg-gray-700/40 backdrop-blur-sm rounded-2xl px-6 py-8 border-1 border-blue-500/20 text-center flex flex-col items-center gap-4"
+      class="w-full bg-gray-700/40 backdrop-blur-sm rounded-2xl px-6 py-8 border-1 border-blue-500/20 text-center flex flex-col items-center gap-4"
       role="status"
       aria-live="polite"
     >
       <img src="images/icons/location.png" alt="" class="h-12 w-12 opacity-90" />
       <h3 class="text-xl font-bold text-gray-100">Any station selected</h3>
-      <p class="text-sm text-gray-400 max-w-[520px]">
+      <p class="text-sm text-gray-400">
         Please select a station to check data. Choose a station from the list on top (or at the
         map), and the dashboard will show the latest readings and details.
       </p>

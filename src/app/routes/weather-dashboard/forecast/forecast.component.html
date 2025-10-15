@@ -8,9 +8,7 @@
   </div>
 </div>
 
-@let forecast = forecastSignal();
-
-@for (item of forecast; track item.day; let last = $last) {
+@for (item of forecastSignal(); track item.day; let last = $last; let i = $index) {
   <div class="group relative overflow-hidden rounded-2xl" [class.mb-3]="!last">
     <div class="custom-card">
       <div class="gradient-background"></div>
@@ -50,9 +48,7 @@
             </div>
           </div>
 
-          <div
-            class="w-px h-10 sm:h-12 bg-gradient-to-b from-transparent via-gray-600 to-transparent"
-          ></div>
+          <hr class="vertical-separator" />
 
           <div class="flex flex-col items-center gap-1 relative group/temp">
             <span class="text-xs text-gray-400 font-medium">Low</span>
@@ -69,17 +65,20 @@
 
         <!-- Wind Information -->
         <div class="number-card bg-gradient-to-r from-cyan-900/20 to-blue-900/20">
-          <div class="text-center group/wind">
+          <div class="flex flex-col items-center group/wind">
             <div class="flex items-center justify-center gap-1 sm:gap-1.5 mb-1">
               <span class="text-sm sm:text-md">🧭</span>
               <p class="text-xs font-semibold text-gray-400">Direction</p>
             </div>
-            <img src="images/icons/wind-direction.png" alt="Wind Direction Icon" class="h-5 w-5" />
+            <img
+              src="images/icons/wind-direction.png"
+              alt="Wind Direction Icon"
+              class="h-5 w-5 transition-transform duration-300"
+              [style.transform]="'rotate(' + windRotationByDay()[i] + 'deg)'"
+            />
           </div>
 
-          <div
-            class="w-px h-10 sm:h-12 bg-gradient-to-b from-transparent via-gray-600 to-transparent"
-          ></div>
+          <hr class="vertical-separator" />
 
           <div class="text-center group/wind">
             <div class="flex items-center justify-center gap-1 sm:gap-1.5 mb-1">

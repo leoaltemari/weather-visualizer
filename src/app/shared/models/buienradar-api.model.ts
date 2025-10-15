@@ -1,17 +1,4 @@
-import { Latitude, Longitude } from './map.model';
-
-const WindDirection = {
-  n: 'North',
-  ne: 'Northeast',
-  e: 'East',
-  se: 'Southeast',
-  s: 'South',
-  sw: 'Southwest',
-  w: 'West',
-  nw: 'Northwest',
-} as const;
-
-export type WindDirection = keyof typeof WindDirection;
+import { CardinalDirection, Latitude, Longitude } from './map.model';
 
 export interface BuienradarApiResponse {
   buienradar: BuienradarInfo;
@@ -43,7 +30,7 @@ export interface Station {
   graphUrl: string;
   lat: Latitude;
   lon: Longitude;
-  winddirection: WindDirection;
+  winddirection: CardinalDirection;
   windazimuth: number;
   windspeed: number;
   temperature: number;
@@ -86,7 +73,7 @@ export interface WeatherForecast {
   maxtemperatureMin: number;
   rainChance: number;
   sunChance: number;
-  windDirection: WindDirection;
+  windDirection: CardinalDirection;
   wind: number;
   mmRainMin: number;
   mmRainMax: number;
