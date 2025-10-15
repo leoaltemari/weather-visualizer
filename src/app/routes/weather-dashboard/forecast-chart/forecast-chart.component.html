@@ -8,15 +8,13 @@
   </div>
 </div>
 
-<div class="group relative overflow-hidden rounded-2xl">
-  <div
-    class="relative p-4 sm:p-5 bg-gradient-to-br from-slate-900/70 to-gray-900/60 border border-blue-500/20"
-  >
-    <p class="mb-2 -mt-1 text-xs text-gray-400">
-      Tip: Click the legend items to hide data you don't want to see.
-    </p>
-    <div class="h-64 sm:h-80">
-      <canvas #chartCanvas aria-label="Weekly temperature line chart" role="img"></canvas>
-    </div>
+<div
+  class="bg-gray-800/90 backdrop-blur-xl rounded-2xl px-6 py-5 shadow-xl border-1 border-blue-500 flex-1"
+>
+  <p class="mb-2 text-xs text-gray-400">
+    Tip: Click the legend items to hide data you don't want to see.
+  </p>
+  <div class="h-64 sm:h-100">
+    <canvas #chartCanvas aria-label="Weekly temperature line chart" role="img"></canvas>
   </div>
 </div>

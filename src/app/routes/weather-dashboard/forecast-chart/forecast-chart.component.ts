@@ -9,7 +9,7 @@ import type { Chart as ChartJS, ChartOptions, ChartDataset, TooltipItem } from '
 @Component({
   selector: 'app-forecast-chart',
   templateUrl: './forecast-chart.component.html',
-  host: { class: 'block' },
+  host: { class: 'flex flex-col' },
   styleUrl: './forecast-chart.component.scss',
   providers: [ChartService],
 })
