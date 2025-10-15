@@ -84,8 +84,9 @@ export class ForecastChartComponent implements AfterViewInit, OnDestroy {
           callback: (value) => `${value}°`,
         },
         grid: { color: 'rgba(148, 163, 184, 0.12)' },
-        beginAtZero: true,
-        suggestedMax: 30,
+        // beginAtZero: true,
+        suggestedMax: 35,
+        suggestedMin: -25,
       },
       y2: {
         position: 'right',

@@ -8,6 +8,7 @@ import { WeatherService } from '@services/weather.service';
 @Component({
   selector: 'app-forecast',
   imports: [CommonModule],
+  host: { class: 'flex flex-col' },
   templateUrl: './forecast.component.html',
 })
 export class ForecastComponent {
