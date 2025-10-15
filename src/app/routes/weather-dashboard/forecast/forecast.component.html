@@ -1,12 +1,8 @@
-<div class="mb-6 pb-4 border-b border-blue-500/30">
-  <div class="flex items-center gap-3">
-    <span class="text-3xl">📅</span>
-    <div>
-      <h2 class="text-2xl sm:text-3xl font-bold text-gray-100 mb-1">5-Day Forecast</h2>
-      <p class="text-sm text-gray-400">Weather outlook for the week ahead</p>
-    </div>
-  </div>
-</div>
+<app-title
+  icon="📅"
+  title="5-Day Forecast"
+  subtitle="Weather outlook for the week ahead"
+></app-title>
 
 <div class="flex flex-col justify-between gap-4 sm:ga-1 flex-1">
   @for (item of forecastSignal(); track item.day; let last = $last; let i = $index) {

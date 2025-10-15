@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ElementRef, inject, OnDestroy, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 
+import { TitleComponent } from '@components/title/title.component';
 import { ChartService } from '@services/chart.service';
 import { WeatherService } from '@services/weather.service';
 
@@ -9,6 +10,7 @@ import type { Chart as ChartJS, ChartOptions, ChartDataset, TooltipItem } from '
 @Component({
   selector: 'app-forecast-chart',
   templateUrl: './forecast-chart.component.html',
+  imports: [TitleComponent],
   host: { class: 'flex flex-col' },
   styleUrl: './forecast-chart.component.scss',
   providers: [ChartService],

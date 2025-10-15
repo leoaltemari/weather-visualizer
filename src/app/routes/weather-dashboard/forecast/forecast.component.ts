@@ -2,12 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 
+import { TitleComponent } from '@components/title/title.component';
 import { cardinalDirectionsToNumberMap } from '@constants/map.constant';
 import { WeatherService } from '@services/weather.service';
 
 @Component({
   selector: 'app-forecast',
-  imports: [CommonModule],
+  imports: [CommonModule, TitleComponent],
   host: { class: 'flex flex-col' },
   templateUrl: './forecast.component.html',
 })
