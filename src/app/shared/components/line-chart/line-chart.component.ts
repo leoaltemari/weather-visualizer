@@ -9,7 +9,7 @@ import {
   viewChild,
 } from '@angular/core';
 
-import { TooltipLabelCallback } from '@models/chart.mode';
+import { TooltipLabelCallback } from '@models/chart.model';
 import { ChartService } from '@services/chart.service';
 
 import type {

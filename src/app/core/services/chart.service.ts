@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { GradientColor, LineChartColor, ShadowPluginOptions } from '@models/chart.mode';
+import { GradientColor, LineChartColor, ShadowPluginOptions } from '@models/chart.model';
 
 // Switch to auto bundle so scales/controllers are registered
 import Chart from 'chart.js/auto';

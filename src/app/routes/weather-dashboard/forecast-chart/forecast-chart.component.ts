@@ -3,7 +3,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 
 import { LineChartComponent } from '@components/line-chart/line-chart.component';
 import { TitleComponent } from '@components/title/title.component';
-import { TooltipLabelCallback } from '@models/chart.mode';
+import { TooltipLabelCallback } from '@models/chart.model';
 import { ChartService } from '@services/chart.service';
 import { WeatherService } from '@services/weather.service';
 
