@@ -1,4 +1,6 @@
-import { TooltipItem, TooltipModel } from 'chart.js';
+import { Chart, TooltipItem, TooltipModel } from 'chart.js';
+
+export type CustomLineChart = Chart<'line'>;
 
 export type RgbColor = `rgb(${number},${number},${number})`;
 export type RgbaColor = `rgba(${number},${number},${number},${number | `${number}.${number}`})`;
