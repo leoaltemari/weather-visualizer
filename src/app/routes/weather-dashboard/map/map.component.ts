@@ -8,7 +8,6 @@ import { WeatherService } from '@services/weather.service';
 
 @Component({
   selector: 'app-map',
-  standalone: true,
   imports: [CommonModule],
   host: {
     class: 'bg-gray-800/90 rounded-2xl shadow-xl border-1 border-blue-500 h-[300px] md:h-full',

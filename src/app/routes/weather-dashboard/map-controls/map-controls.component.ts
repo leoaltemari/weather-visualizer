@@ -11,7 +11,6 @@ import { WeatherService } from '@services/weather.service';
 
 @Component({
   selector: 'app-map-controls',
-  standalone: true,
   imports: [CommonModule],
   host: {
     class: 'bg-gray-800/90 rounded-2xl px-5 p-3 shadow-xl border-1 border-blue-500',

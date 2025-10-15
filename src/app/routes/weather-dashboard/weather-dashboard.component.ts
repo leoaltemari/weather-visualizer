@@ -12,7 +12,6 @@ import { StationDataComponent } from './station-data.component/station-data.comp
 
 @Component({
   selector: 'app-weather-dashboard',
-  standalone: true,
   providers: [WeatherService, MapControlService, MapService],
   imports: [
     CommonModule,

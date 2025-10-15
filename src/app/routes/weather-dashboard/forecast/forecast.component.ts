@@ -7,7 +7,6 @@ import { WeatherService } from '@services/weather.service';
 
 @Component({
   selector: 'app-forecast',
-  standalone: true,
   imports: [CommonModule],
   templateUrl: './forecast.component.html',
 })

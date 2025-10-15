@@ -6,7 +6,6 @@ import { MapControlService } from '@services/map-control.service';
 
 @Component({
   selector: 'app-station-data',
-  standalone: true,
   host: {
     class: `bg-gray-800/90 backdrop-blur-xl rounded-2xl px-6 py-5 shadow-xl border-1 border-blue-500 h-full`,
   },
