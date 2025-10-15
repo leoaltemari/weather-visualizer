@@ -61,4 +61,32 @@ export class WeatherService {
 
     return stations?.find((station) => station.stationid === stationId) ?? null;
   }
+
+  public get3LettersDayforecast(): Observable<string[]> {
+    return this.forecast$.pipe(
+      map((forecasts) =>
+        forecasts.map((forecast) =>
+          new Date(forecast.day).toLocaleDateString('en-US', { weekday: 'short' }),
+        ),
+      ),
+    );
+  }
+
+  public getMaxTemperatureForecast(): Observable<number[]> {
+    return this.forecast$.pipe(
+      map((forecasts) => forecasts.map((forecast) => +forecast.maxtemperature)),
+    );
+  }
+
+  public getMinTemperatureForecast(): Observable<number[]> {
+    return this.forecast$.pipe(
+      map((forecasts) => forecasts.map((forecast) => +forecast.mintemperature)),
+    );
+  }
+
+  public getRainChanceForecast(): Observable<number[]> {
+    return this.forecast$.pipe(
+      map((forecasts) => forecasts.map((forecast) => forecast.rainChance)),
+    );
+  }
 }

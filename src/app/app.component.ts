@@ -3,7 +3,6 @@ import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   template: `
     <main class="min-h-screen" style="background-color: #26323d;">
       <router-outlet></router-outlet>

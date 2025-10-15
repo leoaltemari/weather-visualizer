@@ -1,0 +1,22 @@
+<div class="mb-6 pb-4 border-b border-blue-500/30">
+  <div class="flex items-center gap-3">
+    <span class="text-3xl">📈</span>
+    <div>
+      <h2 class="text-2xl sm:text-3xl font-bold text-gray-100 mb-1">Weekly Temperature Trend</h2>
+      <p class="text-sm text-gray-400">Weather outlook for the week ahead</p>
+    </div>
+  </div>
+</div>
+
+<div class="group relative overflow-hidden rounded-2xl">
+  <div
+    class="relative p-4 sm:p-5 bg-gradient-to-br from-slate-900/70 to-gray-900/60 border border-blue-500/20"
+  >
+    <p class="mb-2 -mt-1 text-xs text-gray-400">
+      Tip: Click the legend items to hide data you don't want to see.
+    </p>
+    <div class="h-64 sm:h-80">
+      <canvas #chartCanvas aria-label="Weekly temperature line chart" role="img"></canvas>
+    </div>
+  </div>
+</div>
