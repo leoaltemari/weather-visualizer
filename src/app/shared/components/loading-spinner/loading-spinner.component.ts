@@ -2,7 +2,6 @@ import { Component, input } from '@angular/core';
 
 @Component({
   selector: 'app-loading-spinner',
-  imports: [],
   template: `
     <div class="relative h-[{{ size() }}}px] w-[{{ size() }}px]">
       <div class="spinner-ring"></div>
