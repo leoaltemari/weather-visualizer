@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 
 import { RequestsServiceBase } from '@abstracts/requests-service.abstract';
-import { REFRESH_INTERVAL } from '@constants/requests.constant';
 import { environment } from '@env';
 import { BuienradarApiResponse, Station } from '@models/buienradar-api.model';
 
@@ -24,6 +23,7 @@ export class WeatherService extends RequestsServiceBase {
   private readonly http = inject(HttpClient);
 
   private readonly WEATHER_API_URL = environment.buienradarUrl;
+  private readonly REFRESH_INTERVAL = 30 * 1000; // 30 seconds
 
   private readonly _weatherData$ = new BehaviorSubject<BuienradarApiResponse | null>(null);
 
@@ -51,7 +51,7 @@ export class WeatherService extends RequestsServiceBase {
   }
 
   public getRealTimeWeatherData(): Observable<BuienradarApiResponse> {
-    return timer(0, REFRESH_INTERVAL).pipe(
+    return timer(0, this.REFRESH_INTERVAL).pipe(
       takeWhile(() => this._enablePooling),
       switchMap(() => this.getWeatherData()),
       shareReplay(1),

@@ -1,5 +1,3 @@
-export const REFRESH_INTERVAL = 30 * 1000; // 30 seconds
-
 export const DEFAULT_ERROR_MESSAGE = 'Failed to load weather data. Please refresh the page.';
 
 export const defaultErrorMessageByStatusCode: Record<number, string> = {
