@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 import { LineChartComponent } from '@components/line-chart/line-chart.component';
@@ -15,6 +15,7 @@ import type { ChartOptions, TooltipItem } from 'chart.js';
   imports: [TitleComponent, LineChartComponent],
   host: { class: 'flex flex-col' },
   providers: [ChartService],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ForecastChartComponent {
   private readonly chartService = inject(ChartService);
