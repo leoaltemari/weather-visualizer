@@ -23,7 +23,7 @@ export class WeatherService extends RequestsServiceBase {
   private readonly http = inject(HttpClient);
 
   private readonly WEATHER_API_URL = environment.buienradarUrl;
-  private readonly REFRESH_INTERVAL = 30 * 1000; // 30 seconds
+  private readonly REFRESH_INTERVAL = 5 * 1000; // 5 seconds
 
   private readonly _weatherData$ = new BehaviorSubject<BuienradarApiResponse | null>(null);
 
