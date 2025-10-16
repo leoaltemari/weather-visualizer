@@ -148,13 +148,14 @@ export class MapService {
       }
     )
       .heatLayer(points, {
-        radius: 15,
-        minOpacity: 0.4,
-        maxZoom: 1,
+        radius: 30,
+        minOpacity: 0.1,
+        blur: 30,
+        maxZoom: 3,
         gradient: {
-          0.0: '#1d4ed8',
-          0.5: '#22c55e',
-          1.0: '#ef4444',
+          0.0: '#1d4ed888',
+          0.5: '#22c55e88',
+          1.0: '#ef444488',
         },
       })
       .addTo(this.map);

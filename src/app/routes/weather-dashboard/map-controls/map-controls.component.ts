@@ -62,6 +62,7 @@ export class MapControlsComponent {
     const enabled = (changeEvent.target as HTMLInputElement).checked;
     this.mapControlService.setHeatmapEnabled(enabled);
 
+    this.mapService.resetMap();
     this.updateMap();
   }
 
