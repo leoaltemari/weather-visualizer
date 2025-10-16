@@ -15,11 +15,18 @@ export class MapControlService {
   );
   readonly visualizationType$ = this._visualizationType$.asObservable();
 
+  private readonly _heatmapEnabled$ = new BehaviorSubject<boolean>(false);
+  readonly heatmapEnabled$ = this._heatmapEnabled$.asObservable();
+
   public setSelectedStation(station: Station | null): void {
     this._selectedStation$.next(station);
   }
 
   public setVisualizationType(type: VisualizationType): void {
     this._visualizationType$.next(type);
+  }
+
+  public setHeatmapEnabled(enabled: boolean): void {
+    this._heatmapEnabled$.next(enabled);
   }
 }

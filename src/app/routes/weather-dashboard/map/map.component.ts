@@ -20,10 +20,19 @@ export class MapComponent {
   private readonly weatherService = inject(WeatherService);
 
   private readonly stations = toSignal(this.weatherService.stations$);
-  readonly selectecVisualizationType = toSignal(this.mapControlService.visualizationType$);
+  private readonly selectecVisualizationType = toSignal(this.mapControlService.visualizationType$);
+  private readonly heatmapEnabled = toSignal(this.mapControlService.heatmapEnabled$);
 
   ngAfterViewInit(): void {
     this.mapService.createMap();
-    this.mapService.updateMarkers(this.stations()!, this.selectecVisualizationType()!);
+
+    const stations = this.stations()!;
+    const type = this.selectecVisualizationType()!;
+
+    if (this.heatmapEnabled()) {
+      this.mapService.updateHeatmap(stations, type);
+    } else {
+      this.mapService.updateMarkers(stations, type);
+    }
   }
 }

@@ -29,3 +29,18 @@ export type CardinalDirection =
   | 'wnw'
   | 'nw'
   | 'nnw';
+
+export interface HeatMapSample {
+  lat: Latitude;
+  lon: Longitude;
+  value: number;
+}
+
+export type HeatPoint = [Latitude, Longitude, number];
+
+export interface HeatLayerOptions {
+  radius?: number;
+  minOpacity?: number;
+  maxZoom?: number;
+  gradient?: Record<number, string>;
+}

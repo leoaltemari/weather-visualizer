@@ -16,6 +16,7 @@ import { WeatherService } from '@services/weather.service';
     class: 'bg-gray-800/90 rounded-2xl px-5 p-3 shadow-xl border-1 border-blue-500',
   },
   templateUrl: './map-controls.component.html',
+  styleUrls: ['./map-controls.component.scss'],
 })
 export class MapControlsComponent {
   private readonly weatherService = inject(WeatherService);
@@ -23,8 +24,10 @@ export class MapControlsComponent {
   private readonly mapService = inject(MapService);
 
   readonly stations = toSignal(this.weatherService.stations$);
+
   readonly selectedStation = toSignal(this.mapControlService.selectedStation$);
   readonly selectedVisualizationType = toSignal(this.mapControlService.visualizationType$);
+  readonly isHeatmapEnabled = toSignal(this.mapControlService.heatmapEnabled$);
 
   readonly isRefreshing = signal(false);
 
@@ -42,20 +45,30 @@ export class MapControlsComponent {
     const stationPosition = [station.lat, station.lon] as Position;
 
     this.mapService.flyTo(stationPosition, FOCUS_MAP_ZOOM);
-    this.mapService.openPopupAt(stationPosition);
+
+    if (!this.isHeatmapEnabled()) {
+      this.mapService.openPopupAt(stationPosition);
+    }
   }
 
   onVisualizationTypeSelect(selectEvent: Event): void {
     const type = (selectEvent.target as HTMLSelectElement).value as VisualizationType;
 
     this.mapControlService.setVisualizationType(type);
+    this.updateMap();
+  }
 
-    this.mapService.updateMarkers(this.stations()!, type);
+  onHeatmapToggle(changeEvent: Event): void {
+    const enabled = (changeEvent.target as HTMLInputElement).checked;
+    this.mapControlService.setHeatmapEnabled(enabled);
+
+    this.updateMap();
   }
 
   onReset(): void {
     this.mapControlService.setSelectedStation(null);
     this.mapControlService.setVisualizationType(VisualizationType.temperature);
+    this.mapControlService.setHeatmapEnabled(false);
 
     this.mapService.resetMap();
     this.mapService.updateMarkers(this.stations()!, VisualizationType.temperature);
@@ -67,6 +80,17 @@ export class MapControlsComponent {
     this.isRefreshing.set(true);
     setTimeout(() => this.isRefreshing.set(false), 1000);
 
-    this.weatherService.getWeatherData().subscribe();
+    this.weatherService.getWeatherData().subscribe(() => this.updateMap());
+  }
+
+  private updateMap(): void {
+    const stations = this.stations()!;
+    const type = this.selectedVisualizationType()!;
+
+    if (this.isHeatmapEnabled()) {
+      this.mapService.updateHeatmap(stations, type);
+    } else {
+      this.mapService.updateMarkers(stations, type);
+    }
   }
 }

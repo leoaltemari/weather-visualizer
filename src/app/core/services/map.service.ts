@@ -2,8 +2,9 @@ import { inject, Injectable } from '@angular/core';
 
 import { DEFAULT_MAP_OPTIONS, FOCUS_MAP_ZOOM, MAX_MAP_ZOOM } from '@constants/map.constant';
 import { Station } from '@models/buienradar-api.model';
-import { MapOptions, Position } from '@models/map.model';
+import { HeatLayerOptions, HeatPoint, MapOptions, Position } from '@models/map.model';
 import { VisualizationType } from '@models/weather.model';
+import { collectValidHeatmapSamples, createHeatMapPoints } from '@utils/map.utils';
 import {
   getColorByVisualizationType,
   getStationValue,
@@ -11,6 +12,7 @@ import {
 } from '@utils/weather.util';
 
 import * as Leaflet from 'leaflet';
+import 'leaflet.heat';
 
 import { MapControlService } from './map-control.service';
 
@@ -23,6 +25,7 @@ export class MapService {
 
   private map!: Leaflet.Map;
   private markers: Leaflet.LayerGroup = Leaflet.layerGroup();
+  private heatLayer: Leaflet.Layer | null = null;
 
   public createMap(options: MapOptions = DEFAULT_MAP_OPTIONS): void {
     this.map = Leaflet.map('map').setView(options.center, options.zoom);
@@ -34,7 +37,7 @@ export class MapService {
   }
 
   public updateMarkers(stations: Station[], visualizationType: VisualizationType): void {
-    this.markers.clearLayers();
+    this.clearMapContent();
 
     stations.forEach((station) => {
       const valueWithUnit = getStationValueWithUnit(visualizationType, station);
@@ -58,6 +61,15 @@ export class MapService {
     this.markers.addTo(this.map);
   }
 
+  public updateHeatmap(stations: Station[], visualizationType: VisualizationType): void {
+    this.clearMapContent();
+
+    const samples = collectValidHeatmapSamples(stations, visualizationType);
+
+    const points = createHeatMapPoints(samples);
+    this.addHeatLayer(points);
+  }
+
   public flyTo(position: Position, zoom: number): void {
     this.map.flyTo(position, zoom);
   }
@@ -66,14 +78,13 @@ export class MapService {
     this.map.closePopup();
 
     this.markers.eachLayer((layer) => {
-      const marker = layer as Leaflet.CircleMarker;
+      if (!(layer instanceof Leaflet.Marker)) {
+        return;
+      }
 
-      if (marker && typeof marker.getLatLng === 'function') {
-        const pos = marker.getLatLng();
-
-        if (pos.lat === lat && pos.lng === lon) {
-          marker.openPopup();
-        }
+      const position = layer.getLatLng();
+      if (position.lat === lat && position.lng === lon) {
+        layer.openPopup();
       }
     });
   }
@@ -85,6 +96,17 @@ export class MapService {
       DEFAULT_MAP_OPTIONS.zoom,
     );
   }
+
+  private clearMapContent(): void {
+    this.markers.clearLayers();
+
+    if (this.heatLayer) {
+      this.map.removeLayer(this.heatLayer);
+      this.heatLayer = null;
+    }
+  }
+
+  /** Marker methods */
 
   private getPopupContent(station: Station): string {
     return `
@@ -115,5 +137,26 @@ export class MapService {
       `,
       iconSize: [100, 60],
     });
+  }
+
+  /** Heatmap methods */
+
+  private addHeatLayer(points: HeatPoint[]): void {
+    this.heatLayer = (
+      Leaflet as unknown as {
+        heatLayer: (points: HeatPoint[], options?: HeatLayerOptions) => Leaflet.Layer;
+      }
+    )
+      .heatLayer(points, {
+        radius: 15,
+        minOpacity: 0.4,
+        maxZoom: 1,
+        gradient: {
+          0.0: '#1d4ed8',
+          0.5: '#22c55e',
+          1.0: '#ef4444',
+        },
+      })
+      .addTo(this.map);
   }
 }

@@ -30,6 +30,21 @@
         <option value="pressure">🌀 Air pressure</option>
       </select>
     </div>
+
+    <!-- Heatmap Toggle -->
+    <div class="custom-input">
+      <label for="heatmap-toggle"><span class="text-lg">🔥</span> Heatmap</label>
+      <label for="heatmap-toggle" class="h-[40px] inline-flex items-center cursor-pointer">
+        <input
+          id="heatmap-toggle"
+          type="checkbox"
+          class="toggle-input"
+          [checked]="isHeatmapEnabled()"
+          (change)="onHeatmapToggle($event)"
+        />
+        <div class="toggle-track"></div>
+      </label>
+    </div>
   </div>
 
   <div class="lg:ml-auto flex items-center justify-center md:justify-end w-full lg:w-auto gap-4">
