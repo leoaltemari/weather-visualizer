@@ -1,14 +1,22 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
 import { Station } from '@models/buienradar-api.model';
 import { VisualizationType } from '@models/weather.model';
+import { WeatherService } from '@services/weather.service';
 
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, combineLatest, map } from 'rxjs';
 
 @Injectable()
 export class MapControlService {
-  private readonly _selectedStation$ = new BehaviorSubject<Station | null>(null);
-  readonly selectedStation$ = this._selectedStation$.asObservable();
+  private readonly weatherService = inject(WeatherService);
+
+  private readonly _selectedStationId$ = new BehaviorSubject<number | null>(null);
+
+  /** Selected station will always be based on stations$ observable so it gets updated value always */
+  readonly selectedStation$ = combineLatest([
+    this._selectedStationId$,
+    this.weatherService.stations$,
+  ]).pipe(map(([id, stations]) => stations.find((station) => station.stationid === id) ?? null));
 
   private readonly _visualizationType$ = new BehaviorSubject<VisualizationType>(
     VisualizationType.temperature,
@@ -19,7 +27,7 @@ export class MapControlService {
   readonly heatmapEnabled$ = this._heatmapEnabled$.asObservable();
 
   public setSelectedStation(station: Station | null): void {
-    this._selectedStation$.next(station);
+    this._selectedStationId$.next(station?.stationid ?? null);
   }
 
   public setVisualizationType(type: VisualizationType): void {

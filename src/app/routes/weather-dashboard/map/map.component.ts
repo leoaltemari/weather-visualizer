@@ -24,7 +24,7 @@ export class MapComponent {
   private readonly selectecVisualizationType = toSignal(this.mapControlService.visualizationType$);
   private readonly heatmapEnabled = toSignal(this.mapControlService.heatmapEnabled$);
 
-  // Track when the map is created so the effect doesn't run prematurely
+  // Track when the map is created so the `syncMap` effect doesn't run prematurely
   private readonly mapCreated = signal(false);
 
   // React to changes in all relevant inputs and update the map accordingly
