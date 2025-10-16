@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 import { MapControlService } from '@services/map-control.service';
@@ -13,6 +13,7 @@ import { WeatherService } from '@services/weather.service';
     class: 'bg-gray-800/90 rounded-2xl shadow-xl border-1 border-blue-500 h-[300px] md:h-full',
   },
   template: `<article id="map" class="rounded-2xl" style="height: 100%; width: 100%"></article>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MapComponent {
   private readonly mapControlService = inject(MapControlService);
@@ -23,16 +24,27 @@ export class MapComponent {
   private readonly selectecVisualizationType = toSignal(this.mapControlService.visualizationType$);
   private readonly heatmapEnabled = toSignal(this.mapControlService.heatmapEnabled$);
 
-  ngAfterViewInit(): void {
-    this.mapService.createMap();
+  // Track when the map is created so the effect doesn't run prematurely
+  private readonly mapCreated = signal(false);
 
-    const stations = this.stations()!;
-    const type = this.selectecVisualizationType()!;
+  // React to changes in all relevant inputs and update the map accordingly
+  private readonly syncMap = effect(() => {
+    const stations = this.stations();
+    const type = this.selectecVisualizationType();
+    const heatmap = this.heatmapEnabled();
+    const mapReady = this.mapCreated();
 
-    if (this.heatmapEnabled()) {
+    if (!mapReady || !stations || !type) return;
+
+    if (heatmap) {
       this.mapService.updateHeatmap(stations, type);
     } else {
       this.mapService.updateMarkers(stations, type);
     }
+  });
+
+  ngAfterViewInit(): void {
+    this.mapService.createMap();
+    this.mapCreated.set(true);
   }
 }
