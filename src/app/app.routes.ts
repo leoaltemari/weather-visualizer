@@ -9,8 +9,7 @@ export const routes: Routes = [
       ),
   },
   {
-    path: '',
+    path: '**',
     redirectTo: 'weather-dashboard',
-    pathMatch: 'full',
   },
 ];
