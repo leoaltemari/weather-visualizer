@@ -1,13 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnDestroy } from '@angular/core';
 
-import { LoadingSpinnerComponent } from '@components/loading-spinner/loading-spinner.component';
+import { ErrorCardComponent } from '@components/error-card/error-card.component';
 import { MapControlService } from '@services/map-control.service';
 import { MapService } from '@services/map.service';
 import { WeatherService } from '@services/weather.service';
 
 import { ForecastChartComponent } from './forecast-chart/forecast-chart.component';
 import { ForecastComponent } from './forecast/forecast.component';
+import { LoadingComponent } from './loading/loading.component';
 import { MapControlsComponent } from './map-controls/map-controls.component';
 import { MapComponent } from './map/map.component';
 import { StationDataComponent } from './station-data.component/station-data.component';
@@ -22,20 +23,27 @@ import { StationDataComponent } from './station-data.component/station-data.comp
     StationDataComponent,
     ForecastComponent,
     ForecastChartComponent,
-    LoadingSpinnerComponent,
+    LoadingComponent,
+    ErrorCardComponent,
   ],
   host: {
     class: 'container mx-auto flex flex-col gap-[24px] md:px-4 py-[32px] h-full',
   },
   templateUrl: './weather-dashboard.component.html',
-  styleUrl: './weather-dashboard.component.scss',
 })
 export class WeatherDashboardComponent implements OnDestroy {
   readonly weatherService = inject(WeatherService);
 
-  readonly weatherData$ = this.weatherService.getRealTimeWeatherData();
+  weatherData$ = this.weatherService.getRealTimeWeatherData();
+  readonly error$ = this.weatherService.error$;
+
+  retryFetch(): void {
+    this.weatherService.clearError();
+    this.weatherService.enablePooling = true;
+    this.weatherData$ = this.weatherService.getRealTimeWeatherData();
+  }
 
   ngOnDestroy(): void {
-    this.weatherService.stopPooling();
+    this.weatherService.enablePooling = false;
   }
 }
