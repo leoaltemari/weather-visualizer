@@ -76,13 +76,13 @@ export class WeatherService extends RequestsServiceBase {
 
   public getMaxTemperatureForecast(): Observable<number[]> {
     return this.forecast$.pipe(
-      map((forecasts) => forecasts.map((forecast) => +forecast.maxtemperature)),
+      map((forecasts) => forecasts.map((forecast) => +forecast.maxtemperatureMax)),
     );
   }
 
   public getMinTemperatureForecast(): Observable<number[]> {
     return this.forecast$.pipe(
-      map((forecasts) => forecasts.map((forecast) => +forecast.mintemperature)),
+      map((forecasts) => forecasts.map((forecast) => +forecast.mintemperatureMin)),
     );
   }
 
