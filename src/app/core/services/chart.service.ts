@@ -1,62 +1,55 @@
 import { Injectable } from '@angular/core';
 
-import { GradientColor, LineChartColor, ShadowPluginOptions } from '@models/chart.model';
+import {
+  GradientColor,
+  LineChartConfig,
+  LineChartDatasetConfig,
+  LineChartObj,
+} from '@models/chart.model';
 
-// Switch to auto bundle so scales/controllers are registered
 import Chart from 'chart.js/auto';
 
-import type { ChartDataset, ChartOptions, Color, Plugin, Point, ScriptableContext } from 'chart.js';
+import type { ChartDataset, Color, Plugin, ScriptableContext } from 'chart.js';
 
 @Injectable()
 export class ChartService {
-  public createLineChart(
-    context: CanvasRenderingContext2D,
-    labels: string[],
-    datasets: ChartDataset<'line'>[],
-    options: ChartOptions<'line'>,
-  ): Chart<'line', (number | Point | null)[], unknown> {
-    return new Chart(context, {
+  public createLineChart(config: LineChartConfig): LineChartObj {
+    return new Chart(config.context, {
       type: 'line',
-      data: { labels, datasets },
-      options,
+      data: { labels: config.labels, datasets: config.datasets },
+      options: config.options,
       plugins: [this.createShadowLinePlugin()],
     });
   }
 
-  public createLineDatasetConfig(
-    label: string,
-    data: (number | Point | null)[],
-    yAxisID: 'y' | 'y2',
-    color: LineChartColor,
-  ): ChartDataset<'line'> {
+  public createLineDataset(config: LineChartDatasetConfig): ChartDataset<'line'> {
     return {
-      label,
-      data,
-      yAxisID,
+      label: config.label,
+      data: config.data,
+      yAxisID: config.yAxisID,
       tension: 0.35,
       borderWidth: 2,
-      borderColor: color.main,
+      borderColor: config.color.main,
       pointRadius: 3,
       pointHoverRadius: 6,
       pointBorderWidth: 1.5,
-      pointBackgroundColor: color.main,
+      pointBackgroundColor: config.color.main,
       pointBorderColor: 'rgba(255, 255, 255, 0.85)',
       fill: true,
-      backgroundColor: (context) => this.getBackgroundColorGradient(context, color.areaGradient),
+      backgroundColor: (context) =>
+        this.getBackgroundColorGradient(context, config.color.areaGradient),
     };
   }
 
-  public createShadowLinePlugin(opts: ShadowPluginOptions = {}): Plugin<'line'> {
-    const { color = 'rgba(0,0,0,0.35)', blur = 8, offsetY = 3 } = opts;
-
+  private createShadowLinePlugin(): Plugin<'line'> {
     return {
       id: 'shadowLine',
       beforeDatasetDraw: (chart) => {
         const { ctx } = chart;
         ctx.save();
-        ctx.shadowColor = color;
-        ctx.shadowBlur = blur;
-        ctx.shadowOffsetY = offsetY;
+        ctx.shadowColor = 'rgba(0,0,0,0.35)';
+        ctx.shadowBlur = 8;
+        ctx.shadowOffsetY = 3;
       },
       afterDatasetDraw: (chart) => {
         const { ctx } = chart;

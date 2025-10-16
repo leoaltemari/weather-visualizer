@@ -1,4 +1,4 @@
-import { Chart, TooltipItem, TooltipModel } from 'chart.js';
+import { Chart, ChartDataset, ChartOptions, Point, TooltipItem, TooltipModel } from 'chart.js';
 
 export type CustomLineChart = Chart<'line'>;
 
@@ -16,6 +16,22 @@ export interface GradientColor {
 export interface LineChartColor {
   main: RGB;
   areaGradient: GradientColor;
+}
+
+export interface LineChartConfig {
+  context: CanvasRenderingContext2D;
+  labels: string[];
+  datasets: ChartDataset<'line'>[];
+  options: ChartOptions<'line'>;
+}
+
+export type LineChartObj = Chart<'line', (number | Point | null)[], unknown>;
+
+export interface LineChartDatasetConfig {
+  label: string;
+  data: (number | Point | null)[];
+  yAxisID: 'y' | 'y2';
+  color: LineChartColor;
 }
 
 export interface ShadowPluginOptions {

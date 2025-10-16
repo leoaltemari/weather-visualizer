@@ -9,21 +9,13 @@ import {
   viewChild,
 } from '@angular/core';
 
-import { TooltipLabelCallback } from '@models/chart.model';
+import { CustomLineChart, TooltipLabelCallback } from '@models/chart.model';
 import { ChartService } from '@services/chart.service';
 
-import type {
-  Chart as ChartJS,
-  ChartOptions,
-  ChartDataset,
-  TooltipItem,
-  ScaleChartOptions,
-  TooltipOptions,
-} from 'chart.js';
+import type { ChartOptions, ChartDataset } from 'chart.js';
 
 @Component({
   selector: 'app-line-chart',
-  imports: [],
   providers: [ChartService],
   templateUrl: './line-chart.component.html',
   styleUrl: './line-chart.component.scss',
@@ -37,7 +29,7 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
   private readonly chartService = inject(ChartService);
 
   private readonly canvasRef = viewChild<ElementRef<HTMLCanvasElement>>('chartCanvas');
-  private chart?: ChartJS<'line'>;
+  private chart?: CustomLineChart;
 
   private readonly options = computed(
     (): ChartOptions<'line'> => ({
@@ -46,6 +38,55 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
       animation: {
         duration: 1200,
         easing: 'easeInOutCubic',
+        onComplete: () => {
+          if (!this.chart) return;
+
+          this.chart.options.animation = {
+            ...this.chart.options.animation,
+            duration: 800,
+          };
+        },
+      },
+      animations: {
+        tension: {
+          duration: 1000,
+          easing: 'easeInOutCubic',
+          from: 0.4,
+          to: 0.3,
+        },
+        y: {
+          duration: 800,
+          easing: 'easeInOutQuart',
+          from: (() => {
+            const droppedStates = new WeakMap();
+            return (ctx) => {
+              if (ctx.type === 'data' && ctx.mode === 'default' && !droppedStates.get(ctx)) {
+                droppedStates.set(ctx, true);
+                return ctx.chart.scales['y'].getPixelForValue(0);
+              }
+              return undefined;
+            };
+          })(),
+        },
+      },
+      transitions: {
+        show: {
+          animations: {
+            x: { from: 0 },
+            y: { from: 0 },
+          },
+        },
+        hide: {
+          animations: {
+            x: { to: 0 },
+            y: { to: 0 },
+          },
+        },
+        active: {
+          animation: {
+            duration: 300,
+          },
+        },
       },
       interaction: {
         intersect: false,
@@ -56,6 +97,12 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
           labels: {
             color: '#e5e7eb',
             font: { weight: 600 },
+          },
+          onHover: (event, legendItem, legend) => {
+            (event.native?.target as HTMLElement).style.cursor = 'pointer';
+          },
+          onLeave: (event, legendItem, legend) => {
+            (event.native?.target as HTMLElement).style.cursor = 'default';
           },
         },
         tooltip: {
@@ -77,12 +124,12 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 
     if (!context) return;
 
-    this.chart = this.chartService.createLineChart(
+    this.chart = this.chartService.createLineChart({
       context,
-      this.labels(),
-      this.datasets(),
-      this.options(),
-    );
+      labels: this.labels(),
+      datasets: this.datasets(),
+      options: this.options(),
+    });
   }
 
   ngOnDestroy(): void {

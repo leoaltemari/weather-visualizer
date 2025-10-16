@@ -74,34 +74,49 @@ export class ForecastChartComponent {
 
   // Datasets
   readonly maxTemperatureDataset = computed(() => {
-    return this.chartService.createLineDatasetConfig('Max Temp (°C)', this.maxTemperature(), 'y', {
-      main: 'rgb(239, 68, 68)', // red-500
-      areaGradient: {
-        start: 'rgba(239,68,68,0.30)',
-        midle: 'rgba(239,68,68,0.15)',
-        end: 'rgba(239,68,68,0.00)',
+    return this.chartService.createLineDataset({
+      label: 'Max Temp (°C)',
+      data: this.maxTemperature(),
+      yAxisID: 'y',
+      color: {
+        main: 'rgb(239, 68, 68)', // red-500
+        areaGradient: {
+          start: 'rgba(239,68,68,0.30)',
+          midle: 'rgba(239,68,68,0.15)',
+          end: 'rgba(239,68,68,0.00)',
+        },
       },
     });
   });
 
   readonly minTemperatureDataset = computed(() => {
-    return this.chartService.createLineDatasetConfig('Min Temp (°C)', this.minTemperature(), 'y', {
-      main: 'rgb(59, 130, 246)', // blue-500
-      areaGradient: {
-        start: 'rgba(59,130,246,0.30)',
-        midle: 'rgba(59,130,246,0.15)',
-        end: 'rgba(59,130,246,0.00)',
+    return this.chartService.createLineDataset({
+      label: 'Min Temp (°C)',
+      data: this.minTemperature(),
+      yAxisID: 'y',
+      color: {
+        main: 'rgb(59, 130, 246)', // blue-500
+        areaGradient: {
+          start: 'rgba(59,130,246,0.30)',
+          midle: 'rgba(59,130,246,0.15)',
+          end: 'rgba(59,130,246,0.00)',
+        },
       },
     });
   });
 
   readonly rainChanceDataset = computed(() => {
-    return this.chartService.createLineDatasetConfig('Rain Chance (%)', this.rainChance(), 'y2', {
-      main: 'rgb(16, 185, 129)', // emerald-500
-      areaGradient: {
-        start: 'rgba(16,185,129,0.30)',
-        midle: 'rgba(16,185,129,0.15)',
-        end: 'rgba(16,185,129,0.00)',
+    return this.chartService.createLineDataset({
+      label: 'Rain Chance (%)',
+      data: this.rainChance(),
+      yAxisID: 'y2',
+      color: {
+        main: 'rgb(16, 185, 129)', // emerald-500
+        areaGradient: {
+          start: 'rgba(16,185,129,0.30)',
+          midle: 'rgba(16,185,129,0.15)',
+          end: 'rgba(16,185,129,0.00)',
+        },
       },
     });
   });
