@@ -1,11 +1,14 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
   ElementRef,
   inject,
   input,
   OnDestroy,
+  untracked,
   viewChild,
 } from '@angular/core';
 
@@ -19,6 +22,7 @@ import type { ChartOptions, ChartDataset } from 'chart.js';
   providers: [ChartService],
   templateUrl: './line-chart.component.html',
   styleUrl: './line-chart.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LineChartComponent implements AfterViewInit, OnDestroy {
   readonly labels = input.required<string[]>();
@@ -118,6 +122,21 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
       scales: this.scales(),
     }),
   );
+
+  // React to input signal changes and update the chart accordingly
+  private readonly updateChartOnInputsChange = effect(() => {
+    const labels = this.labels();
+    const datasets = this.datasets();
+
+    if (!this.chart) return;
+
+    // Perform mutations without tracking and defer the update to avoid re-entrancy
+    untracked(() => {
+      this.chart!.data.labels = labels;
+      this.chart!.data.datasets = datasets;
+      this.chart?.update('none');
+    });
+  });
 
   ngAfterViewInit(): void {
     const context = this.canvasRef()?.nativeElement.getContext('2d');
