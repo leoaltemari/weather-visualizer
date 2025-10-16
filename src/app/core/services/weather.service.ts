@@ -1,11 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 
+import { RequestsServiceBase } from '@abstracts/requests-service.abstract';
+import { REFRESH_INTERVAL } from '@constants/requests.constant';
 import { environment } from '@env';
 import { BuienradarApiResponse, Station } from '@models/buienradar-api.model';
 
 import {
   BehaviorSubject,
+  catchError,
   map,
   Observable,
   retry,
@@ -17,11 +20,10 @@ import {
 } from 'rxjs';
 
 @Injectable()
-export class WeatherService {
+export class WeatherService extends RequestsServiceBase {
   private readonly http = inject(HttpClient);
 
   private readonly WEATHER_API_URL = environment.buienradarUrl;
-  private readonly REFRESH_INTERVAL = 30 * 1000; // 30 seconds
 
   private readonly _weatherData$ = new BehaviorSubject<BuienradarApiResponse | null>(null);
 
@@ -32,24 +34,24 @@ export class WeatherService {
     map((data) => data?.forecast?.fivedayforecast ?? []),
   );
 
-  /** Controls when the pooling must stop */
-  private _enablePooling = true;
-
-  public stopPooling(): void {
-    this._enablePooling = false;
-  }
-
   public getWeatherData(): Observable<BuienradarApiResponse> {
     return this.http.get<BuienradarApiResponse>(this.WEATHER_API_URL).pipe(
-      retry(3),
-      tap((data) => this._weatherData$.next(data)),
+      retry({ count: 3, delay: 500 }),
+      tap((data) => {
+        this._weatherData$.next(data);
+        this._error$.next(null);
+      }),
+      catchError((error) => {
+        const errorMessage = this.getErrorMessage(error.status);
+        this._error$.next(errorMessage);
+
+        throw error;
+      }),
     );
   }
 
-  public getRealTimeWeatherData(
-    refreshIntervalMs = this.REFRESH_INTERVAL,
-  ): Observable<BuienradarApiResponse> {
-    return timer(0, refreshIntervalMs).pipe(
+  public getRealTimeWeatherData(): Observable<BuienradarApiResponse> {
+    return timer(0, REFRESH_INTERVAL).pipe(
       takeWhile(() => this._enablePooling),
       switchMap(() => this.getWeatherData()),
       shareReplay(1),

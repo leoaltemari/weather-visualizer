@@ -29,6 +29,7 @@
       "@components/*": ["app/shared/components/*"],
       "@services/*": ["app/core/services/*"],
       "@constants/*": ["app/shared/constants/*"],
+      "@abstracts/*": ["app/shared/abstracts/*"],
       "@utils/*": ["app/shared/utils/*"],
       "@env": ["environments/environment"],
     }
