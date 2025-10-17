@@ -1,5 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  inject,
+  OnDestroy,
+  signal,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 import { MapControlService } from '@services/map-control.service';
@@ -15,7 +23,7 @@ import { WeatherService } from '@services/weather.service';
   template: `<article id="map" class="rounded-2xl" style="height: 100%; width: 100%"></article>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MapComponent {
+export class MapComponent implements AfterViewInit, OnDestroy {
   private readonly mapControlService = inject(MapControlService);
   private readonly mapService = inject(MapService);
   private readonly weatherService = inject(WeatherService);
@@ -27,7 +35,7 @@ export class MapComponent {
   // Track when the map is created so the `syncMap` effect doesn't run prematurely
   private readonly mapCreated = signal(false);
 
-  // React to changes in all relevant inputs and update the map accordingly
+  // React to changes in all relevant data update and update the map accordingly
   private readonly syncMap = effect(() => {
     const stations = this.stations();
     const type = this.selectecVisualizationType();
@@ -46,5 +54,9 @@ export class MapComponent {
   ngAfterViewInit(): void {
     this.mapService.createMap();
     this.mapCreated.set(true);
+  }
+
+  ngOnDestroy(): void {
+    this.mapService.destroyMap();
   }
 }

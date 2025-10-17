@@ -25,9 +25,28 @@ import type { ChartOptions, ChartDataset } from 'chart.js';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LineChartComponent implements AfterViewInit, OnDestroy {
+  /**
+   * Labels for the x-axis of the chart.
+   * Each label corresponds to a data point across all datasets.
+   */
   readonly labels = input.required<string[]>();
+
+  /**
+   * Scale configuration for the chart axes.
+   * Defines the appearance and behavior of x and y axes including ticks, grid lines, and ranges.
+   */
   readonly scales = input.required<ChartOptions<'line'>['scales']>();
+
+  /**
+   * Array of datasets to be displayed in the chart.
+   * Each dataset represents a line with its own styling, data, and axis assignment.
+   */
   readonly datasets = input.required<ChartDataset<'line'>[]>();
+
+  /**
+   * Optional callback function to customize tooltip label formatting.
+   * Used to format the text displayed when hovering over data points.
+   */
   readonly tooltipLabelCallback = input<TooltipLabelCallback>();
 
   private readonly chartService = inject(ChartService);
@@ -123,7 +142,7 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
     }),
   );
 
-  // React to input signal changes and update the chart accordingly
+  /** React to input signal changes and update the chart accordingly */
   private readonly updateChartOnInputsChange = effect(() => {
     const labels = this.labels();
     const datasets = this.datasets();
@@ -131,6 +150,7 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
     if (!this.chart) return;
 
     untracked(() => {
+      /** Keep chart state, if any line is hidden it will remains hidden after chart updated it values */
       const prevHiddenByKey = this.readPrevHiddenByKey(this.chart!);
       const nextDatasets = this.buildDatasetsWithPreservedHidden(datasets, prevHiddenByKey);
 

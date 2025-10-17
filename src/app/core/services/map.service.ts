@@ -24,7 +24,17 @@ export class MapService {
   private readonly tileLayerAttribution = `© OpenStreetMap contributors`;
 
   private map!: Leaflet.Map;
+
+  /**
+   * Layer group containing all station markers displayed on the map.
+   * Manages the collection of markers and provides batch operations.
+   */
   private markers: Leaflet.LayerGroup = Leaflet.layerGroup();
+
+  /**
+   * Reference to the currently active heatmap layer on the map.
+   * Null when no heatmap is displayed.
+   */
   private heatLayer: Leaflet.Layer | null = null;
 
   /** Stores the station id of the popup that is opened to not remove it from the map when data updates */
@@ -37,6 +47,10 @@ export class MapService {
       attribution: this.tileLayerAttribution,
       maxZoom: MAX_MAP_ZOOM,
     }).addTo(this.map);
+  }
+
+  public destroyMap(): void {
+    this.map.remove();
   }
 
   public updateMarkers(stations: Station[], visualizationType: VisualizationType): void {
@@ -76,6 +90,13 @@ export class MapService {
     this.addHeatLayer(points);
   }
 
+  /**
+   * Animates the map view to fly to a specific position with a target zoom level.
+   * Provides smooth transition animation between the current view and target position.
+   *
+   * @param position - Target coordinates [latitude, longitude]
+   * @param zoom - Target zoom level for the map
+   */
   public flyTo(position: Position, zoom: number): void {
     this.map.flyTo(position, zoom);
   }
@@ -121,8 +142,6 @@ export class MapService {
     markersToRemove.forEach((layer) => this.markers.removeLayer(layer));
   }
 
-  /** Marker methods */
-
   private onMarkerClick(station: Station): void {
     this.mapControlService.setSelectedStation(station);
     this._openedPopupStationId = station.stationid;
@@ -160,8 +179,12 @@ export class MapService {
     });
   }
 
-  /** Heatmap methods */
-
+  /**
+   * Creates and adds a heatmap layer to the map using the provided heat points.
+   * Configures the heatmap with predefined styling including radius, opacity, blur, and gradient colors.
+   *
+   * @param points - Array of heat points [latitude, longitude, intensity] to display on the heatmap
+   */
   private addHeatLayer(points: HeatPoint[]): void {
     this.heatLayer = (
       Leaflet as unknown as {

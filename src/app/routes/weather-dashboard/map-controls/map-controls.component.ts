@@ -30,6 +30,7 @@ export class MapControlsComponent {
   readonly selectedVisualizationType = toSignal(this.mapControlService.visualizationType$);
   readonly isHeatmapEnabled = toSignal(this.mapControlService.heatmapEnabled$);
 
+  /** Controls refreshing animation time */
   readonly isRefreshing = signal(false);
 
   onStationSelect(selectEvent: Event): void {

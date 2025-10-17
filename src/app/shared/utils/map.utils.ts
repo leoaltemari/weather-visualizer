@@ -4,6 +4,15 @@ import { VisualizationType } from '@models/weather.model';
 
 import { getStationValue } from './weather.util';
 
+/**
+ * Creates normalized heat map points from heat map samples.
+ *
+ * Normalizes the intensity values to a 0-1 range and applies gamma correction
+ * for stronger visual intensity. Returns an empty array if no samples are provided.
+ *
+ * @param samples - Array of heat map samples containing latitude, longitude, and value
+ * @returns Array of heat points with normalized intensities [lat, lon, intensity]
+ */
 export const createHeatMapPoints = (samples: HeatMapSample[]): HeatPoint[] => {
   if (!samples.length) {
     return [];
@@ -25,6 +34,16 @@ export const createHeatMapPoints = (samples: HeatMapSample[]): HeatPoint[] => {
   });
 };
 
+/**
+ * Collects valid heat map samples from weather stations based on visualization type.
+ *
+ * Filters out stations without valid values for the specified visualization type
+ * and maps them to heat map samples containing location and value data.
+ *
+ * @param stations - Array of weather station data
+ * @param visualizationType - Type of weather data to visualize (e.g., temperature, humidity)
+ * @returns Array of valid heat map samples with non-null values
+ */
 export const collectValidHeatmapSamples = (
   stations: Station[],
   visualizationType: VisualizationType,

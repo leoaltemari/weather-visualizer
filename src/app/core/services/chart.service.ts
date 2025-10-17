@@ -22,6 +22,15 @@ export class ChartService {
     });
   }
 
+  /**
+   * Creates a configured line chart dataset with styling and gradient background.
+   *
+   * Generates a dataset with predefined visual properties including border styling,
+   * point styling, fill configuration, and gradient background colors.
+   *
+   * @param config - Configuration object containing label, data, axis assignment, and color settings
+   * @returns A fully configured ChartDataset for line charts
+   */
   public createLineDataset(config: LineChartDatasetConfig): ChartDataset<'line'> {
     return {
       label: config.label,
@@ -41,6 +50,15 @@ export class ChartService {
     };
   }
 
+  /**
+   * Creates a Chart.js plugin that adds shadow effects to line chart datasets.
+   *
+   * Applies a shadow with configurable blur, offset, and color to enhance
+   * the visual appearance of chart lines. The shadow is drawn before each
+   * dataset and the context is restored afterward.
+   *
+   * @returns A Chart.js plugin object with beforeDatasetDraw and afterDatasetDraw hooks
+   */
   private createShadowLinePlugin(): Plugin<'line'> {
     return {
       id: 'shadowLine',
@@ -67,11 +85,11 @@ export class ChartService {
 
     if (!chartArea) return gradient.midle;
 
-    const g = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+    const linearGradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
 
-    g.addColorStop(0, gradient.start);
-    g.addColorStop(1, gradient.end);
+    linearGradient.addColorStop(0, gradient.start);
+    linearGradient.addColorStop(1, gradient.end);
 
-    return g;
+    return linearGradient;
   }
 }
