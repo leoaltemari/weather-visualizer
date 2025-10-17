@@ -3,7 +3,12 @@ import { inject, Injectable } from '@angular/core';
 
 import { RequestsServiceBase } from '@abstracts/requests-service.abstract';
 import { environment } from '@env';
-import { BuienradarApiResponse, Station } from '@models/buienradar-api.model';
+import {
+  BuienradarApiResponse,
+  BuienradarGraphQLResponse,
+  Station,
+} from '@models/buienradar-api.model';
+import { WEATHER_QUERY } from '@queries/weather-query.graphql';
 
 import {
   BehaviorSubject,
@@ -22,7 +27,8 @@ import {
 export class WeatherService extends RequestsServiceBase {
   private readonly http = inject(HttpClient);
 
-  private readonly WEATHER_API_URL = environment.buienradarUrl;
+  private readonly GRAPHQL_API_URL =
+    environment.buienradarApiUrl || environment.localhostBuienradarApiUrl;
   private readonly REFRESH_INTERVAL = 5 * 1000; // 5 seconds
 
   private readonly _weatherData$ = new BehaviorSubject<BuienradarApiResponse | null>(null);
@@ -35,8 +41,11 @@ export class WeatherService extends RequestsServiceBase {
   );
 
   public getWeatherData(): Observable<BuienradarApiResponse> {
-    return this.http.get<BuienradarApiResponse>(this.WEATHER_API_URL).pipe(
+    const body = { query: WEATHER_QUERY };
+
+    return this.http.post<BuienradarGraphQLResponse>(this.GRAPHQL_API_URL, body).pipe(
       retry({ count: 3, delay: 500 }),
+      map((res) => res.data.weatherData),
       tap((data) => {
         this._weatherData$.next(data);
         this._error$.next(null);

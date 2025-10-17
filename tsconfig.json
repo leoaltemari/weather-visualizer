@@ -31,6 +31,7 @@
       "@constants/*": ["app/shared/constants/*"],
       "@abstracts/*": ["app/shared/abstracts/*"],
       "@utils/*": ["app/shared/utils/*"],
+      "@queries/*": ["app/core/graphql/*"],
       "@env": ["environments/environment"],
     }
   },

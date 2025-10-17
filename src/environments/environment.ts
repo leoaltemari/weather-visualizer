@@ -1,3 +1,5 @@
 export const environment = Object.freeze({
-  buienradarUrl: 'https://data.buienradar.nl/2.0/feed/json',
+  production: false,
+  buienradarApiUrl: 'https://weather-api-kx46.onrender.com',
+  localhostBuienradarApiUrl: 'http://localhost:4000',
 });
