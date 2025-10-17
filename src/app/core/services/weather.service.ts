@@ -27,8 +27,7 @@ import {
 export class WeatherService extends RequestsServiceBase {
   private readonly http = inject(HttpClient);
 
-  private readonly GRAPHQL_API_URL =
-    environment.buienradarApiUrl || environment.localhostBuienradarApiUrl;
+  private readonly GRAPHQL_API_URL = environment.buienradarApiUrl;
   private readonly REFRESH_INTERVAL = 5 * 1000; // 5 seconds
 
   private readonly _weatherData$ = new BehaviorSubject<BuienradarApiResponse | null>(null);
@@ -73,6 +72,21 @@ export class WeatherService extends RequestsServiceBase {
     return stations?.find((station) => station.stationid === stationId) ?? null;
   }
 
+  /**
+   * Retrieves the three-letter weekday abbreviations for the five-day weather forecast.
+   * Transforms forecast dates into short weekday names (e.g., "Mon", "Tue", "Wed").
+   *
+   * @returns Observable emitting an array of three-letter weekday abbreviations
+   *
+   * @example
+   * ```typescript
+   * // Subscribe to get weekday labels for chart x-axis
+   * this.weatherService.get3LettersDayforecast().subscribe(days => {
+   *   console.log(days);
+   *   // Output: ["Mon", "Tue", "Wed", "Thu", "Fri"]
+   * });
+   * ```
+   */
   public get3LettersDayforecast(): Observable<string[]> {
     return this.forecast$.pipe(
       map((forecasts) =>

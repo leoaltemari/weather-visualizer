@@ -14,6 +14,16 @@ import {
   WIND_UNIT,
 } from '@models/weather.model';
 
+/**
+ * Retrieves the numeric value for a specific visualization type from a weather station.
+ *
+ * Extracts the appropriate measurement value (temperature, wind speed, or air pressure)
+ * based on the specified visualization type.
+ *
+ * @param type - The type of weather data to retrieve
+ * @param station - The weather station containing the measurement data
+ * @returns The numeric value for the specified type, or null if not available
+ */
 export const getStationValue = (type: VisualizationType, station: Station): number | null => {
   const valueByType = {
     [VisualizationType.temperature]: station.temperature,
@@ -24,6 +34,16 @@ export const getStationValue = (type: VisualizationType, station: Station): numb
   return valueByType[type] ?? null;
 };
 
+/**
+ * Retrieves the formatted value with unit for a specific visualization type from a weather station.
+ *
+ * Extracts the measurement value and formats it with the appropriate unit
+ * (°C for temperature, km/h for wind, hPa for pressure) based on the visualization type.
+ *
+ * @param type - The type of weather data to retrieve and format
+ * @param station - The weather station containing the measurement data
+ * @returns The formatted value with unit as a string, or null if not available
+ */
 export const getStationValueWithUnit = (
   type: VisualizationType,
   station: Station,
@@ -39,6 +59,19 @@ export const getStationValueWithUnit = (
   return `${getStationValue(type, station)} ${unitByType[type]}`;
 };
 
+/**
+ * Determines the color representation for a given weather value based on visualization type.
+ *
+ * Maps numeric weather values to predefined color codes based on thresholds:
+ * - Temperature: Hot (red), Mild (yellow), or Cold (blue)
+ * - Wind: Strong (dark) or Light (light)
+ * - Pressure: High (blue) or Low (orange)
+ * Returns a default color if the value is null or undefined.
+ *
+ * @param type - The type of weather data being visualized
+ * @param value - The numeric value to determine the color for, or null
+ * @returns A color code string representing the value's classification
+ */
 export const getColorByVisualizationType = (
   type: VisualizationType,
   value: number | null,

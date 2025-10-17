@@ -1,9 +1,4 @@
-@if (error$ | async; as error) {
-  <app-error-card
-    [errorMessage]="error"
-    [tryAgainFunction]="retryFetch.bind(this)"
-  ></app-error-card>
-} @else if (weatherData$ | async; as weatherData) {
+@if (weatherData$ | async; as weatherData) {
   <app-map-controls class="rounded-2xl md:col-span-2"></app-map-controls>
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-[24px]">
@@ -14,9 +9,13 @@
       class="order-1 lg:order-none md:col-span-2 lg:col-span-1"
     ></app-forecast-chart>
   </div>
-
-  <!-- Loading State -->
+} @else if (error$ | async; as error) {
+  <app-error-card
+    [errorMessage]="error"
+    [tryAgainFunction]="retryFetch.bind(this)"
+  ></app-error-card>
 } @else {
+  <!-- Loading State -->
   <div class="flex flex-col items-center justify-center gap-8">
     <app-loading-spinner></app-loading-spinner>
 
