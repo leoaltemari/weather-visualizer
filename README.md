@@ -4,7 +4,7 @@
 
 ### Real-time Weather Data Visualization for the Netherlands
 
-A modern Angular application that visualizes live weather measurements from 40+ stations across the Netherlands from [Buienradar API](https://data.buienradar.nl/2.0/feed/json) with interactive maps and realtime integration.
+A modern Angular application that visualizes live weather measurements from 40+ stations across the Netherlands from [GraphQL weather API](https://github.com/leoaltemari/weather-api) created tobe a proxy for [Buienradar API](https://data.buienradar.nl/2.0/feed/json) with interactive maps and realtime integration.
 
 [![Angular](https://img.shields.io/badge/Angular-20+-DD0031?style=flat&logo=angular)](https://angular.io/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4+-38B2AC?style=flat&logo=tailwind-css)](https://tailwindcss.com/)
