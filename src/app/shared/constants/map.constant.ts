@@ -1,6 +1,6 @@
 import { CardinalDirection } from '@models/map.model';
 
-export const DEFAULT_MAP_ZOOM = 6;
+export const DEFAULT_MAP_ZOOM = 7;
 export const FOCUS_MAP_ZOOM = 9;
 export const MAX_MAP_ZOOM = 15;
 

@@ -5,8 +5,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "build:pages": " ng build --output-path docs --base-href /https://leoaltemari.github.io/weather-visualizer/ --configuration production",
-    "deploy:pages": "npx angular-cli-ghpages --dir=docs",
+    "build:prod": "ng build c --production --base-href ./",
+    "deploy:prod": "npm run build:pages & npx angular-cli-ghpages",
     "watch": "ng build --watch --configuration development",
     "test": "ng test --watch --browsers=ChromeHeadless",
     "test:coverage": "ng test --watch --code-coverage --browsers=ChromeHeadless"

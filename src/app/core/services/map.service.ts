@@ -165,9 +165,11 @@ export class MapService {
   private addHeatLayer(points: HeatPoint[]): void {
     this.heatLayer = (
       Leaflet as unknown as {
-        heatLayer: (points: HeatPoint[], options?: HeatLayerOptions) => Leaflet.Layer;
+        default: {
+          heatLayer: (points: HeatPoint[], options?: HeatLayerOptions) => Leaflet.Layer;
+        };
       }
-    )
+    ).default
       .heatLayer(points, {
         radius: 30,
         minOpacity: 0.1,
