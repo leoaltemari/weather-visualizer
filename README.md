@@ -1,59 +1,165 @@
-# WeatherVisualizer
+<div align="center">
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.5.
+# 🌤️ Weather Visualizer
 
-## Development server
+### Real-time Weather Data Visualization for the Netherlands
 
-To start a local development server, run:
+A modern Angular application that visualizes live weather measurements from 40+ stations across the Netherlands from [Buienradar API](https://data.buienradar.nl/2.0/feed/json) with interactive maps and realtime integration.
+
+[![Angular](https://img.shields.io/badge/Angular-20+-DD0031?style=flat&logo=angular)](https://angular.io/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4+-38B2AC?style=flat&logo=tailwind-css)](https://tailwindcss.com/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5+-3178C6?style=flat&logo=typescript)](https://www.typescriptlang.org/)
+[![Leaflet](https://img.shields.io/badge/Leaflet-1.9+-199900?style=flat&logo=leaflet)](https://leafletjs.com/)
+[![Chart.js](https://img.shields.io/badge/Chart.js-4.5+-FF6384?style=flat&logo=chartdotjs)](https://www.chartjs.org/)
+
+<div align="center">
+  <img src="./public/github/main-page.PNG" alt="Weather Visualizer Screenshot" width="700" height="500px"/>
+</div>
+
+</div>
+
+## 🚀 Live Demo
+- [Weather Visualizer](https://leoaltemari.github.io/weather-visualizer/weather-dashboard)
+
+## 📋 Table of Contents
+
+- [✨ Features](#-features)
+- [🔄 Realtime Data](#-realtime-data)
+- [🗂️ State Management](#️-state-management)
+- [⚙️ Installation](#️-installation)
+- [🚀 Usage](#-usage)
+- [🧪 Unit Tests](#-unit-tests)
+- [📱 Contact](#-contact)
+
+## ✨ Features
+
+### 📍 Interactive Weather Map
+
+**🗺️ Station Selection**
+- Click any station marker at the map to view detailed weather measurements (temperature, wind, pressure, humidity, visibility)
+
+**📊 Visualization Modes:**
+
+- 🌡️ **Temperature**
+- 💨 **Wind Speed**
+- 🌀 **Air Pressure**
+
+**🔥 Heat Map**
+- Toggle overlay to visualize geographical patterns and gradients
+- Dynamically adapts to selected visualization type (Temperature/Wind/Pressure)
+
+### 🔄 Data Controls
+
+- **Manual Refresh** - Force immediate data update alongside automatic 5-second polling
+- **Reset State** - Return to initial application state with one click
+
+### 📅 5-Day Weather Forecast
+
+- **📈 Interactive Chart** - Visualize daily weather trends with hover tooltips
+- **🌡️ Temperature Range** - Min/max predictions with color-coded curves
+- **🌧️ Rain Probability** - Percentage chance of precipitation per day
+- **📆 Day Navigation** - Browse and compare 5 days of forecast data
+
+
+## 🔄 Realtime Data
+
+The application maintains live synchronization with weather stations through intelligent polling mechanisms.
+
+### Automatic Updates
+
+- **⏱️ Polling Interval**: Fresh data every **5 seconds**
+- **🎯 Reactive Components**: Each component responds to new data emissions instantly
+- **🚀 Performance Optimized**: Minimal network overhead by reusing cached structures
+
+
+Components consume reactive streams through signals, ensuring **granular and smooth updates** without full-page refreshes.
+
+## 🗂️ State Management
+
+Modern reactive architecture combining **RxJS**, **Signals**, and **Effects** for optimal performance.
+
+- **RxJS Observables** handle fetching, polling, and data transformation
+- **Signals** for components states management
+
+**Why Signals on components?**
+- ✅ Efficient integration with zone.js
+- ✅ Perfect pairing with OnPush strategy
+- ✅ Reduced unnecessary change detection cycles
+- ✅ Better performance and developer experience
+
+### 🎭 Application States
+
+<table>
+  <tr>
+    <td width="50%">
+      <h4>⏳ Loading State</h4>
+      <p>Elegant skeletons and spinners during data fetch</p>
+      <img src="./public/github/loading.PNG" alt="Loading State" width="100%"/>
+    </td>
+    <td width="50%">
+      <h4>❌ Error State</h4>
+      <p>Non-blocking error banner with retry action</p>
+      <img src="./public/github/error.PNG" alt="Error State" width="100%"/>
+    </td>
+  </tr>
+</table>
+
+## ⚙️ Installation
+
+### 📋 Prerequisites
+
+Ensure you have the following installed:
+
+- **Node.js** LTS (^20.19.0 || ^22.12.0 || ^24.0.0) - [Download](https://nodejs.org/)
+- **npm**, **yarn**, or **pnpm**
+- **Angular CLI**:
+  ```bash
+  npm install -g @angular/cli
+  ```
+
+### 🚀 Setup Steps
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/leoaltemari/weather-visualizer.git
+   cd weather-visualizer
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+## 🚀 Usage
+
+### 💻 Development Server
+
+Start the development server:
 
 ```bash
+npm start
+# or
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Open your browser at **http://localhost:4200**
 
-## Code scaffolding
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## 🧪 Unit Tests
 
-```bash
-ng generate component component-name
-```
+### 🔬 Running Tests
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Execute unit tests with Karma:
 
 ```bash
-ng generate --help
+npm run test:coverage
 ```
 
-## Building
+Code coverage was focused to achieve 80% coverage:
+<img src="./public/github/unit-tests.PNG" alt="Code coverage results" width="100%"/>
 
-To build the project run:
+## 📱 Contact
 
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- **Author**: Leonardo Altemari
+- **Linkedin**: [Leonardo Altemari](https://www.linkedin.com/in/leonardo-altemari/)
+- **Email**: leo.altemari@gmail.com
