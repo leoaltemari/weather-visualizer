@@ -27,6 +27,9 @@ export class MapService {
   private markers: Leaflet.LayerGroup = Leaflet.layerGroup();
   private heatLayer: Leaflet.Layer | null = null;
 
+  /** Stores the station id of the popup that is opened to not remove it from the map when data updates */
+  private _openedPopupStationId: number | null = null;
+
   public createMap(options: MapOptions = DEFAULT_MAP_OPTIONS): void {
     this.map = Leaflet.map('map').setView(options.center, options.zoom);
 
@@ -39,24 +42,27 @@ export class MapService {
   public updateMarkers(stations: Station[], visualizationType: VisualizationType): void {
     this.clearMapContent();
 
-    stations.forEach((station) => {
-      const valueWithUnit = getStationValueWithUnit(visualizationType, station);
-      const value = getStationValue(visualizationType, station);
-      const color = getColorByVisualizationType(visualizationType, value);
+    stations
+      .filter((station) => this._openedPopupStationId !== station.stationid)
+      .forEach((station) => {
+        const valueWithUnit = getStationValueWithUnit(visualizationType, station);
+        const value = getStationValue(visualizationType, station);
+        const color = getColorByVisualizationType(visualizationType, value);
 
-      const popupHTML = this.getPopupContent(station);
+        const popupHTML = this.getPopupContent(station);
 
-      const marker = Leaflet.marker([station.lat, station.lon], {
-        icon: this.getMarkerOptions(station.fullIconUrl, color, value ? valueWithUnit : 'N/A'),
-      })
-        .bindPopup(popupHTML)
-        .on('click', () => {
-          this.mapControlService.setSelectedStation(station);
-          this.flyTo([station.lat, station.lon], FOCUS_MAP_ZOOM);
-        });
+        const marker = Leaflet.marker([station.lat, station.lon], {
+          icon: this.getMarkerOptions(station.fullIconUrl, color, value ? valueWithUnit : 'N/A'),
+        })
+          .bindPopup(popupHTML)
+          .on('popupopen', () => this.onMarkerClick(station))
+          .on('popupclose', () => (this._openedPopupStationId = null));
 
-      this.markers.addLayer(marker);
-    });
+        // Tag the marker with station id so we can preserve it later
+        (marker as any)._stationId = station.stationid;
+
+        this.markers.addLayer(marker);
+      });
 
     this.markers.addTo(this.map);
   }
@@ -98,7 +104,7 @@ export class MapService {
   }
 
   private clearMapContent(): void {
-    this.markers.clearLayers();
+    this.removeMarkersFromMap();
 
     if (this.heatLayer) {
       this.map.removeLayer(this.heatLayer);
@@ -106,7 +112,22 @@ export class MapService {
     }
   }
 
+  /** Remove all markers except the one with the opened popup (if any) */
+  private removeMarkersFromMap(): void {
+    const markersToRemove = this.markers
+      .getLayers()
+      .filter((layer) => (layer as any)._stationId !== this._openedPopupStationId);
+
+    markersToRemove.forEach((layer) => this.markers.removeLayer(layer));
+  }
+
   /** Marker methods */
+
+  private onMarkerClick(station: Station): void {
+    this.mapControlService.setSelectedStation(station);
+    this._openedPopupStationId = station.stationid;
+    this.flyTo([station.lat, station.lon], FOCUS_MAP_ZOOM);
+  }
 
   private getPopupContent(station: Station): string {
     return `

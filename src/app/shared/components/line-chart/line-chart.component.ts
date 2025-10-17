@@ -130,11 +130,13 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 
     if (!this.chart) return;
 
-    // Perform mutations without tracking and defer the update to avoid re-entrancy
     untracked(() => {
+      const prevHiddenByKey = this.readPrevHiddenByKey(this.chart!);
+      const nextDatasets = this.buildDatasetsWithPreservedHidden(datasets, prevHiddenByKey);
+
       this.chart!.data.labels = labels;
-      this.chart!.data.datasets = datasets;
-      this.chart?.update('none');
+      this.chart!.data.datasets = nextDatasets;
+      this.chart!.update('none');
     });
   });
 
@@ -153,5 +155,41 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.chart?.destroy();
+  }
+
+  // Build a stable key for a dataset (prefer label, fallback to index)
+  private makeDatasetKey(ds: ChartDataset<'line'>, index: number): string {
+    return ds.label ?? String(index);
+  }
+
+  // Read the previous hidden state by dataset key (combining meta.hidden and ds.hidden)
+  private readPrevHiddenByKey(chart: CustomLineChart): Map<string, boolean> {
+    const prevHidden = new Map<string, boolean>();
+    const prevDatasets = chart.data.datasets as ChartDataset<'line'>[];
+
+    prevDatasets.forEach((ds, i) => {
+      const meta = chart.getDatasetMeta(i);
+      const key = this.makeDatasetKey(ds, i);
+      const wasHidden = meta.hidden === null ? Boolean(ds.hidden) : Boolean(meta.hidden);
+      prevHidden.set(key, wasHidden);
+    });
+
+    return prevHidden;
+  }
+
+  // Produce new datasets with preserved hidden state (keeps inputs immutable)
+  private buildDatasetsWithPreservedHidden(
+    next: ChartDataset<'line'>[],
+    hiddenByKey: Map<string, boolean>,
+  ): ChartDataset<'line'>[] {
+    return next.map((ds, i) => {
+      const key = this.makeDatasetKey(ds, i);
+      const wasHidden = hiddenByKey.get(key);
+      const copy: ChartDataset<'line'> = { ...ds };
+
+      copy.hidden = wasHidden ? wasHidden : undefined;
+
+      return copy;
+    });
   }
 }

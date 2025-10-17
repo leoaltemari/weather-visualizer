@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
 
 import { ErrorCardComponent } from '@components/error-card/error-card.component';
 import { LoadingSpinnerComponent } from '@components/loading-spinner/loading-spinner.component';
@@ -31,6 +31,7 @@ import { StationDataComponent } from './station-data.component/station-data.comp
   },
   templateUrl: './weather-dashboard.component.html',
   styleUrls: ['./weather-dashboard.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WeatherDashboardComponent implements OnDestroy {
   readonly weatherService = inject(WeatherService);

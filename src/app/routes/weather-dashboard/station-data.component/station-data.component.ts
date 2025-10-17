@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 import { MapControlService } from '@services/map-control.service';
@@ -11,6 +11,7 @@ import { MapControlService } from '@services/map-control.service';
   },
   imports: [CommonModule],
   templateUrl: './station-data.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StationDataComponent {
   private readonly mapControlService = inject(MapControlService);

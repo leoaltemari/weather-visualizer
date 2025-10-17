@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 @Component({
   selector: 'app-error-card',
@@ -7,6 +7,7 @@ import { Component, input } from '@angular/core';
   },
   templateUrl: './error-card.component.html',
   styleUrl: './error-card.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ErrorCardComponent {
   readonly errorMessage = input<string>();

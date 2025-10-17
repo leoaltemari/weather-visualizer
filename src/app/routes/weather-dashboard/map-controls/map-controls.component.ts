@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 import { FOCUS_MAP_ZOOM } from '@constants/map.constant';
@@ -17,6 +17,7 @@ import { WeatherService } from '@services/weather.service';
   },
   templateUrl: './map-controls.component.html',
   styleUrls: ['./map-controls.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MapControlsComponent {
   private readonly weatherService = inject(WeatherService);
@@ -35,18 +36,16 @@ export class MapControlsComponent {
     const id = +(selectEvent.target as HTMLSelectElement).value;
     const station = this.weatherService.getStationDataById(id);
 
+    this.mapControlService.setSelectedStation(station);
+
     if (!station) {
       this.mapService.resetMap();
       return;
     }
 
-    this.mapControlService.setSelectedStation(station);
-
-    const stationPosition = [station.lat, station.lon] as Position;
-
-    this.mapService.flyTo(stationPosition, FOCUS_MAP_ZOOM);
-
     if (!this.isHeatmapEnabled()) {
+      const stationPosition = [station.lat, station.lon] as Position;
+      this.mapService.flyTo(stationPosition, FOCUS_MAP_ZOOM);
       this.mapService.openPopupAt(stationPosition);
     }
   }
