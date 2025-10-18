@@ -47,8 +47,7 @@
                 "output": "assets/"
               }
             ],
-            "styles": ["src/styles.scss", "node_modules/leaflet/dist/leaflet.css"],
-            "scripts": ["node_modules/leaflet.heat/dist/leaflet-heat.js"]
+            "styles": ["src/styles.scss", "node_modules/leaflet/dist/leaflet.css"]
           },
           "configurations": {
             "production": {
@@ -106,8 +105,7 @@
                 "output": "assets/"
               }
             ],
-            "styles": ["src/styles.scss", "./node_modules/leaflet/dist/leaflet.css"],
-            "scripts": ["node_modules/leaflet.heat/dist/leaflet-heat.js"]
+            "styles": ["src/styles.scss", "./node_modules/leaflet/dist/leaflet.css"]
           }
         }
       }
