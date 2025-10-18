@@ -41,20 +41,20 @@ describe('ForecastComponent', () => {
 
   it('should map known wind directions to correct degrees', () => {
     const payload = [
-      { windDirection: 'noord' },
+      { windDirection: 'n' },
       { windDirection: 'no' },
-      { windDirection: 'oost' },
-      { windDirection: 'zw' },
-      { windDirection: 'nnw' },
-    ] as any[];
+      { windDirection: 'o' },
+      { windDirection: 'zo' },
+      { windDirection: 'z' },
+    ];
     forecastSubject.next(payload);
     fixture.detectChanges();
 
-    expect(component.windRotationByDay()).toEqual([0, 45, 90, 225, 337.5]);
+    expect(component.windRotationByDay()).toEqual([0, 45, 90, 135, 180]);
   });
 
   it('should default to 0 when windDirection is missing or invalid', () => {
-    const payload = [{}, { windDirection: 'invalid' as any }] as any[];
+    const payload = [{}, { windDirection: 'invalid' }];
     forecastSubject.next(payload);
     fixture.detectChanges();
 
@@ -62,23 +62,19 @@ describe('ForecastComponent', () => {
   });
 
   it('should react to subsequent emissions and update rotations', () => {
-    const first = [
-      { windDirection: 'n' },
-      { windDirection: 'oost' },
-      { windDirection: 'zuid' },
-    ] as any[];
+    const first = [{ windDirection: 'n' }, { windDirection: 'no' }, { windDirection: 'o' }];
     forecastSubject.next(first);
     fixture.detectChanges();
-    expect(component.windRotationByDay()).toEqual([0, 90, 180]);
+    expect(component.windRotationByDay()).toEqual([0, 45, 90]);
 
-    const second = [{ windDirection: 'west' }] as any[];
+    const second = [{ windDirection: 'w' }];
     forecastSubject.next(second);
     fixture.detectChanges();
     expect(component.windRotationByDay()).toEqual([270]);
   });
 
   it('should expose the latest forecast value through forecastSignal', () => {
-    const payload = [{ windDirection: 'wzw' }, { windDirection: 'nw' }] as any[];
+    const payload = [{ windDirection: 'wzw' }, { windDirection: 'nw' }] as any;
     forecastSubject.next(payload);
     fixture.detectChanges();
 

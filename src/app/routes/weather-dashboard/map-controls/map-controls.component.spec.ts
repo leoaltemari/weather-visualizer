@@ -1,31 +1,36 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 
 import { FOCUS_MAP_ZOOM } from '@constants/map.constant';
+import { Station } from '@models/buienradar-api.model';
 import { VisualizationType } from '@models/weather.model';
 import { MapControlService } from '@services/map-control.service';
 import { MapService } from '@services/map.service';
 import { WeatherService } from '@services/weather.service';
 
-import { BehaviorSubject, of } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 
 import { MapControlsComponent } from './map-controls.component';
 
 class WeatherServiceMock {
-  stations$ = new BehaviorSubject<any[]>([]);
-  getWeatherData = jasmine.createSpy('getWeatherData').and.returnValue(of({} as any));
+  stations$ = new BehaviorSubject<Station[]>([]);
+  getWeatherData = jasmine
+    .createSpy('getWeatherData')
+    .and.returnValue(of({}) as Observable<unknown>);
   getStationDataById = jasmine
     .createSpy('getStationDataById')
-    .and.callFake((id: number) => this.stations$.value.find((s) => s.stationid === id) ?? null);
+    .and.callFake(
+      (id: number): Station | null => this.stations$.value.find((s) => s.stationid === id) ?? null,
+    );
 }
 
 class MapControlServiceMock {
-  selectedStation$ = new BehaviorSubject<any | null>(null);
+  selectedStation$ = new BehaviorSubject<Station | null>(null);
   visualizationType$ = new BehaviorSubject<VisualizationType>(VisualizationType.temperature);
   heatmapEnabled$ = new BehaviorSubject<boolean>(false);
 
   setSelectedStation = jasmine
     .createSpy('setSelectedStation')
-    .and.callFake((station: any | null) => this.selectedStation$.next(station));
+    .and.callFake((station: Station | null) => this.selectedStation$.next(station));
   setVisualizationType = jasmine
     .createSpy('setVisualizationType')
     .and.callFake((type: VisualizationType) => this.visualizationType$.next(type));
@@ -86,7 +91,12 @@ describe('MapControlsComponent', () => {
   });
 
   it('should focus and open popup when selecting an existing station and heatmap is disabled', () => {
-    const station = { stationid: 1, lat: 10, lon: 20, stationname: 'Station A' } as any;
+    const station: Station = {
+      stationid: 1,
+      lat: 10,
+      lon: 20,
+      stationname: 'Station A',
+    } as Station;
     weatherServiceMock.stations$.next([station]);
     mapControlServiceMock.heatmapEnabled$.next(false);
 
@@ -98,7 +108,12 @@ describe('MapControlsComponent', () => {
   });
 
   it('should not change map view when selecting an existing station and heatmap is enabled', () => {
-    const station = { stationid: 2, lat: 30, lon: 40, stationname: 'Station B' } as any;
+    const station: Station = {
+      stationid: 2,
+      lat: 30,
+      lon: 40,
+      stationname: 'Station B',
+    } as Station;
     weatherServiceMock.stations$.next([station]);
     mapControlServiceMock.heatmapEnabled$.next(true);
 
@@ -110,23 +125,21 @@ describe('MapControlsComponent', () => {
   });
 
   it('should change visualization type and update markers', () => {
-    const stations = [
-      { stationid: 3, lat: 50, lon: 60 } as any,
-      { stationid: 4, lat: 70, lon: 80 } as any,
+    const stations: Station[] = [
+      { stationid: 3, lat: 50, lon: 60 } as Station,
+      { stationid: 4, lat: 70, lon: 80 } as Station,
     ];
     weatherServiceMock.stations$.next(stations);
     mapControlServiceMock.heatmapEnabled$.next(false);
 
-    component.onVisualizationTypeSelect(
-      createSelectEvent(VisualizationType.wind as unknown as string),
-    );
+    component.onVisualizationTypeSelect(createSelectEvent(VisualizationType.wind));
 
     expect(mapControlServiceMock.setVisualizationType).toHaveBeenCalledWith(VisualizationType.wind);
     expect(mapServiceMock.updateMarkers).toHaveBeenCalledWith(stations, VisualizationType.wind);
   });
 
   it('should enable heatmap, reset map, and update heatmap', () => {
-    const stations = [{ stationid: 5, lat: 1, lon: 2 } as any];
+    const stations: Station[] = [{ stationid: 5, lat: 1, lon: 2 } as Station];
     weatherServiceMock.stations$.next(stations);
     mapControlServiceMock.visualizationType$.next(VisualizationType.pressure);
 
@@ -138,7 +151,7 @@ describe('MapControlsComponent', () => {
   });
 
   it('should disable heatmap, reset map, and update markers', () => {
-    const stations = [{ stationid: 6, lat: 3, lon: 4 } as any];
+    const stations: Station[] = [{ stationid: 6, lat: 3, lon: 4 } as Station];
     weatherServiceMock.stations$.next(stations);
     mapControlServiceMock.visualizationType$.next(VisualizationType.temperature);
     mapControlServiceMock.heatmapEnabled$.next(true);
@@ -154,7 +167,7 @@ describe('MapControlsComponent', () => {
   });
 
   it('should reset controls to defaults and update markers', () => {
-    const stations = [{ stationid: 7, lat: 9, lon: 8 } as any];
+    const stations: Station[] = [{ stationid: 7, lat: 9, lon: 8 } as Station];
     weatherServiceMock.stations$.next(stations);
     mapControlServiceMock.visualizationType$.next(VisualizationType.wind);
     mapControlServiceMock.heatmapEnabled$.next(true);
@@ -181,7 +194,7 @@ describe('MapControlsComponent', () => {
   });
 
   it('should refresh data, update map, and toggle refreshing state', fakeAsync(() => {
-    const stations = [{ stationid: 8, lat: 11, lon: 12 } as any];
+    const stations: Station[] = [{ stationid: 8, lat: 11, lon: 12 } as Station];
     weatherServiceMock.stations$.next(stations);
     mapControlServiceMock.heatmapEnabled$.next(false);
     mapControlServiceMock.visualizationType$.next(VisualizationType.temperature);

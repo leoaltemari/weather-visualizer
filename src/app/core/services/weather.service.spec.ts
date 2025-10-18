@@ -2,7 +2,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 
-import { BuienradarApiResponse } from '@models/buienradar-api.model';
+import { BuienradarApiResponse, BuienradarGraphQLResponse } from '@models/buienradar-api.model';
 
 import { firstValueFrom } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -88,6 +88,16 @@ describe('WeatherService', () => {
     return { ...base, ...override };
   };
 
+  const mockGraphQLResponse = (
+    override?: Partial<BuienradarApiResponse>,
+  ): BuienradarGraphQLResponse => {
+    return {
+      data: {
+        weatherData: mockResponse(override),
+      },
+    };
+  };
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [],
@@ -114,26 +124,29 @@ describe('WeatherService', () => {
   it('getWeatherData returns data and updates internal subjects', async () => {
     const promise = firstValueFrom(service.getWeatherData());
     const req = httpMock.expectOne(() => true);
-    expect(req.request.method).toBe('GET');
+    expect(req.request.method).toBe('POST');
 
-    const data = mockResponse();
+    const data = mockGraphQLResponse();
     req.flush(data);
 
     const result = await promise;
-    expect(result).toEqual(data);
+    expect(result).toEqual(data.data.weatherData);
 
     const stations = await firstValueFrom(service.stations$.pipe(take(1)));
     expect(stations.length).toBe(2);
   });
 
   it('getWeatherData retries and then errors, setting error$', fakeAsync(async () => {
-    const spyMsg = spyOn<any>(service as any, 'getErrorMessage').and.returnValue('ERR');
+    const spyMsg = spyOn(
+      service as unknown as { getErrorMessage: (status: number) => string },
+      'getErrorMessage',
+    ).and.returnValue('ERR');
     const errorSpy = jasmine.createSpy('error');
     service.getWeatherData().subscribe({ error: errorSpy });
 
     for (let i = 0; i < 4; i++) {
       const req = httpMock.expectOne(() => true);
-      expect(req.request.method).toBe('GET');
+      expect(req.request.method).toBe('POST');
       req.flush('x', { status: 500, statusText: 'Server Error' });
       tick(500);
     }
@@ -147,7 +160,7 @@ describe('WeatherService', () => {
   it('getStationDataById returns station when present and null otherwise', async () => {
     const p = firstValueFrom(service.getWeatherData());
     const req = httpMock.expectOne(() => true);
-    req.flush(mockResponse());
+    req.flush(mockGraphQLResponse());
     await p;
     const s1 = service.getStationDataById(2);
     expect(s1?.stationname).toBe('B');
@@ -158,7 +171,7 @@ describe('WeatherService', () => {
   it('get3LettersDayforecast emits 3-letter weekdays', async () => {
     const p = firstValueFrom(service.getWeatherData());
     const req = httpMock.expectOne(() => true);
-    req.flush(mockResponse());
+    req.flush(mockGraphQLResponse());
     await p;
     const days = await firstValueFrom(service.get3LettersDayforecast().pipe(take(1)));
     expect(days.length).toBe(3);
@@ -168,7 +181,7 @@ describe('WeatherService', () => {
   it('getMaxTemperatureForecast emits numbers', async () => {
     const p = firstValueFrom(service.getWeatherData());
     const req = httpMock.expectOne(() => true);
-    req.flush(mockResponse());
+    req.flush(mockGraphQLResponse());
     await p;
     const vals = await firstValueFrom(service.getMaxTemperatureForecast().pipe(take(1)));
     expect(vals).toEqual([13, 14, 15]);
@@ -177,7 +190,7 @@ describe('WeatherService', () => {
   it('getMinTemperatureForecast emits numbers', async () => {
     const response = firstValueFrom(service.getWeatherData());
     const req = httpMock.expectOne(() => true);
-    req.flush(mockResponse());
+    req.flush(mockGraphQLResponse());
     await response;
     const vals = await firstValueFrom(service.getMinTemperatureForecast().pipe(take(1)));
     expect(vals).toEqual([4, 5, 6]);
@@ -186,7 +199,7 @@ describe('WeatherService', () => {
   it('getRainChanceForecast emits numbers', async () => {
     const response = firstValueFrom(service.getWeatherData());
     const req = httpMock.expectOne(() => true);
-    req.flush(mockResponse());
+    req.flush(mockGraphQLResponse());
     await response;
     const vals = await firstValueFrom(service.getRainChanceForecast().pipe(take(1)));
     expect(vals).toEqual([20, 30, 40]);

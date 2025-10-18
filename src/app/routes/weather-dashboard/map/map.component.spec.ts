@@ -44,6 +44,7 @@ describe('MapComponent', () => {
       'createMap',
       'updateMarkers',
       'updateHeatmap',
+      'destroyMap',
     ]);
 
     await TestBed.configureTestingModule({

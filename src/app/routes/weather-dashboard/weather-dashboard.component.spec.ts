@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { WeatherService } from '@services/weather.service';
 
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 import { WeatherDashboardComponent } from './weather-dashboard.component';
 
@@ -10,7 +10,7 @@ describe('WeatherDashboardComponent', () => {
   let fixture: ComponentFixture<WeatherDashboardComponent>;
   let component: WeatherDashboardComponent;
   let weatherServiceMock: {
-    error$: any;
+    error$: Observable<string | null>;
     enablePooling: boolean;
     getRealTimeWeatherData: jasmine.Spy;
     clearError: jasmine.Spy;

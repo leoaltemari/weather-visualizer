@@ -56,7 +56,7 @@ describe('MapService private methods', () => {
         rainFallLast24Hour: 3.7,
       });
 
-      const result = (service as any).getPopupContent(station) as string;
+      const result = service['getPopupContent'](station);
 
       expect(typeof result).toBe('string');
       expect(result).toContain('<span class="font-bold">Amsterdam</span>');
@@ -76,7 +76,7 @@ describe('MapService private methods', () => {
         rainFallLast24Hour: undefined as unknown as number,
       });
 
-      const result = (service as any).getPopupContent(stationWithMissingValues) as string;
+      const result = service['getPopupContent'](stationWithMissingValues);
 
       expect(result).toContain('Temperature: <strong>-- °C</strong>');
       expect(result).toContain('Humidity: <strong>-- %</strong>');
@@ -92,15 +92,11 @@ describe('MapService private methods', () => {
       const color = '#ff0000';
       const displayValue = '42 km/h';
 
-      const divIcon = (service as any).getMarkerOptions(
-        iconUrl,
-        color,
-        displayValue,
-      ) as Leaflet.DivIcon;
+      const divIcon = service['getMarkerOptions'](iconUrl, color, displayValue);
 
       expect(divIcon instanceof Leaflet.DivIcon).toBeTrue();
 
-      const options = divIcon.options as Leaflet.DivIconOptions;
+      const options = divIcon.options;
       expect(typeof options.html).toBe('string');
 
       const html = options.html as string;
@@ -115,11 +111,7 @@ describe('MapService private methods', () => {
       const color = '#00ff00';
       const numericValue = 15;
 
-      const divIcon = (service as any).getMarkerOptions(
-        iconUrl,
-        color,
-        numericValue,
-      ) as Leaflet.DivIcon;
+      const divIcon = service['getMarkerOptions'](iconUrl, color, numericValue);
 
       const html = (divIcon.options.html as string) || '';
       expect(html).toContain(`class="text-center font-bold text-xs ml-1">${numericValue}</p>`);

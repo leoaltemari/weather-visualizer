@@ -4,6 +4,44 @@ import { LineChartColor } from '@models/chart.model';
 
 import { ChartService } from './chart.service';
 
+interface ChartArea {
+  top: number;
+  bottom: number;
+}
+
+interface GradientMock {
+  addColorStop: jasmine.Spy;
+}
+
+interface CanvasContextMock {
+  createLinearGradient: jasmine.Spy;
+}
+
+interface ChartContext {
+  chart: {
+    ctx: CanvasContextMock;
+    chartArea: ChartArea;
+  };
+}
+
+interface ChartContextWithoutArea {
+  chart: {
+    chartArea: undefined;
+  };
+}
+
+interface PluginContext {
+  save: jasmine.Spy;
+  restore: jasmine.Spy;
+  shadowColor?: string;
+  shadowBlur?: number;
+  shadowOffsetY?: number;
+}
+
+interface ChartForPlugin {
+  ctx: PluginContext;
+}
+
 describe('ChartService', () => {
   let service: ChartService;
 
@@ -43,25 +81,27 @@ describe('ChartService', () => {
     expect(dataset.pointBackgroundColor).toBe(colorConfig.main);
     expect(typeof dataset.backgroundColor).toBe('function');
 
-    const backgroundColorFunction = dataset.backgroundColor as (ctx: any) => any;
+    const backgroundColorFunction = dataset.backgroundColor as (
+      ctx: ChartContextWithoutArea | ChartContext,
+    ) => string | CanvasGradient;
 
-    const scriptableContextWithoutArea = {
+    const scriptableContextWithoutArea: ChartContextWithoutArea = {
       chart: {
         chartArea: undefined,
       },
-    } as any;
+    };
 
     const colorWhenNoArea = backgroundColorFunction(scriptableContextWithoutArea);
     expect(colorWhenNoArea).toBe(colorConfig.areaGradient.midle);
 
-    const gradientStub = {
+    const gradientStub: GradientMock = {
       addColorStop: jasmine.createSpy('addColorStop'),
     };
     const createLinearGradientSpy = jasmine
       .createSpy('createLinearGradient')
-      .and.returnValue(gradientStub);
+      .and.returnValue(gradientStub as unknown as CanvasGradient);
 
-    const scriptableContextWithArea = {
+    const scriptableContextWithArea: ChartContext = {
       chart: {
         ctx: {
           createLinearGradient: createLinearGradientSpy,
@@ -71,13 +111,13 @@ describe('ChartService', () => {
           bottom: 210,
         },
       },
-    } as any;
+    };
 
     const returnedGradient = backgroundColorFunction(scriptableContextWithArea);
     expect(createLinearGradientSpy).toHaveBeenCalledWith(0, 10, 0, 210);
     expect(gradientStub.addColorStop).toHaveBeenCalledWith(0, colorConfig.areaGradient.start);
     expect(gradientStub.addColorStop).toHaveBeenCalledWith(1, colorConfig.areaGradient.end);
-    expect(returnedGradient).toBe(gradientStub as any);
+    expect(returnedGradient).toBe(gradientStub);
   });
 
   it('should create a line chart with provided config and include operational shadow plugin', () => {
@@ -108,7 +148,7 @@ describe('ChartService', () => {
       animation: false,
       plugins: { legend: { display: false } },
       scales: { y: { display: false } },
-    } as any;
+    } as Record<string, unknown>;
 
     const chartInstance = service.createLineChart({
       context: renderingContext,
@@ -121,25 +161,29 @@ describe('ChartService', () => {
     expect(chartInstance.config.data.labels as string[]).toEqual(labels);
     expect(chartInstance.config.data.datasets.length).toBe(1);
 
-    const pluginsArray = (chartInstance.config.plugins || []) as any[];
+    const pluginsArray = (chartInstance.config.plugins || []) as Array<{
+      id?: string;
+      beforeDatasetDraw?: (chart: ChartForPlugin) => void;
+      afterDatasetDraw?: (chart: ChartForPlugin) => void;
+    }>;
     expect(Array.isArray(pluginsArray)).toBeTrue();
     const shadowPlugin = pluginsArray.find((p) => p && p.id === 'shadowLine');
     expect(shadowPlugin).toBeTruthy();
 
-    const fakeContext = {
+    const fakeContext: PluginContext = {
       save: jasmine.createSpy('save'),
       restore: jasmine.createSpy('restore'),
-    } as any;
+    };
 
-    const fakeChartForPlugin = { ctx: fakeContext } as any;
+    const fakeChartForPlugin: ChartForPlugin = { ctx: fakeContext };
 
-    shadowPlugin.beforeDatasetDraw(fakeChartForPlugin);
+    shadowPlugin?.beforeDatasetDraw?.(fakeChartForPlugin);
     expect(fakeContext.save).toHaveBeenCalled();
     expect(fakeContext.shadowColor).toBe('rgba(0,0,0,0.35)');
     expect(fakeContext.shadowBlur).toBe(8);
     expect(fakeContext.shadowOffsetY).toBe(3);
 
-    shadowPlugin.afterDatasetDraw(fakeChartForPlugin);
+    shadowPlugin?.afterDatasetDraw?.(fakeChartForPlugin);
     expect(fakeContext.restore).toHaveBeenCalled();
 
     chartInstance.destroy();

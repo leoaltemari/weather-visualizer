@@ -58,7 +58,7 @@ describe('weather.util', () => {
     });
 
     it('returns null for invalid type', () => {
-      expect(getStationValue('invalid' as any, base)).toBeNull();
+      expect(getStationValue('invalid' as VisualizationType, base)).toBeNull();
     });
   });
 
@@ -81,7 +81,7 @@ describe('weather.util', () => {
     });
 
     it('returns null when unit is not mapped (invalid type)', () => {
-      expect(getStationValueWithUnit('invalid' as any, base)).toBeNull();
+      expect(getStationValueWithUnit('invalid' as VisualizationType, base)).toBeNull();
     });
   });
 
@@ -143,7 +143,9 @@ describe('weather.util', () => {
     });
 
     it('default: returns NONE for unsupported type', () => {
-      expect(getColorByVisualizationType('invalid' as any, 42)).toBe(TEMPERATURE_COLORS.NONE);
+      expect(getColorByVisualizationType('invalid' as VisualizationType, 42)).toBe(
+        TEMPERATURE_COLORS.NONE,
+      );
     });
   });
 });

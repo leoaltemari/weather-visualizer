@@ -29,8 +29,8 @@ describe('ForecastChartComponent', () => {
     };
 
     createLineDatasetSpy = spyOn(ChartService.prototype, 'createLineDataset').and.callFake(
-      (config: any) => {
-        return { label: config.label, data: config.data, yAxisID: config.yAxisID } as any;
+      (config) => {
+        return { label: config.label, data: config.data, yAxisID: config.yAxisID };
       },
     );
 

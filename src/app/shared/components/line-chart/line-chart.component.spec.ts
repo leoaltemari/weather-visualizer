@@ -79,7 +79,7 @@ describe('LineChartComponent', () => {
     setCanvasContext(null);
     const opts = (component as any).options() as any;
 
-    expect(() => opts.animation.onComplete()).not.toThrow();
+    expect(() => opts.animation!.onComplete()).not.toThrow();
 
     fixture.detectChanges();
     expect(mockChartService.createLineChart).not.toHaveBeenCalled();
