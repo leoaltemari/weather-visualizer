@@ -8,27 +8,7 @@ export interface MapOptions {
   zoom: number;
 }
 
-export type CardinalDirection =
-  | 'noord'
-  | 'n'
-  | 'nno'
-  | 'no'
-  | 'ono'
-  | 'oost'
-  | 'o'
-  | 'ozo'
-  | 'zo'
-  | 'zzo'
-  | 'zuid'
-  | 'z'
-  | 'zzw'
-  | 'zw'
-  | 'wzw'
-  | 'west'
-  | 'w'
-  | 'wnw'
-  | 'nw'
-  | 'nnw';
+export type CardinalDirection = 'n' | 'no' | 'o' | 'zo' | 'z' | 'zw' | 'w' | 'nw';
 
 export interface HeatMapSample {
   lat: Latitude;
