@@ -22,7 +22,6 @@
   grid-template-columns: 1fr;
   gap: 1.5rem;
   width: 100%;
-  max-width: 1200px;
   margin: 0 auto;
 
   @media (min-width: 768px) {
@@ -56,7 +55,7 @@
   }
 
   &.tall {
-    min-height: 500px;
+    min-height: 300px;
   }
 
   &.wide {
