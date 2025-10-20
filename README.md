@@ -71,8 +71,28 @@ The application maintains live synchronization with weather stations through int
 - **🎯 Reactive Components**: Each component responds to new data emissions instantly
 - **🚀 Performance Optimized**: Minimal network overhead by reusing cached structures
 
-
 Components consume reactive streams through signals, ensuring **granular and smooth updates** without full-page refreshes.
+
+### 🤔 Why Short Polling Instead of WebSockets or SSE?
+
+The application uses **short polling** (5-second intervals) as the realtime strategy. Here's why this approach was chosen:
+
+**Data Characteristics**
+- Weather data updates are not millisecond-critical
+- 5 second latency is perfectly acceptable for meteorological data
+- Data sources (weather stations) typically update every 3-5 minutes
+
+**Infrastructure Compatibility**
+- No special server-side requirements (WebSocket server, SSE endpoints)
+- Compatible with static hosting (GitHub Pages)
+- No need for persistent connections or server push capabilities
+
+**Cost & Resource Efficiency**
+- Lower server resource consumption (no persistent connections)
+- Predictable and controllable bandwidth usage
+- Scales easily with standard HTTP caching strategies
+
+**For this weather visualization application**, short polling provides the **optimal balance** between simplicity, reliability, and user experience without over-engineering the solution.
 
 ## 🗂️ State Management
 
