@@ -13,7 +13,7 @@ A modern Angular application that visualizes live weather measurements from 40+ 
 [![Chart.js](https://img.shields.io/badge/Chart.js-4.5+-FF6384?style=flat&logo=chartdotjs)](https://www.chartjs.org/)
 
 <div align="center">
-  <img src="./public/github/main-page.png" alt="Weather Visualizer Screenshot" width="700" height="500px"/>
+  <img src="public/github/main-page.png" alt="Weather Visualizer Screenshot" width="700" height="500px"/>
 </div>
 
 </div>
@@ -114,12 +114,12 @@ Modern reactive architecture combining **RxJS**, **Signals**, and **Effects** fo
     <td width="50%">
       <h4>⏳ Loading State</h4>
       <p>Elegant skeletons and spinners during data fetch</p>
-      <img src="./public/github/loading.png" alt="Loading State" width="100%"/>
+      <img src="public/github/loading.png" alt="Loading State" width="100%"/>
     </td>
     <td width="50%">
       <h4>❌ Error State</h4>
       <p>Non-blocking error banner with retry action</p>
-      <img src="./public/github/error.png" alt="Error State" width="100%"/>
+      <img src="public/github/error.png" alt="Error State" width="100%"/>
     </td>
   </tr>
 </table>
@@ -176,7 +176,7 @@ npm run test:coverage
 ```
 
 Code coverage was focused to achieve 80% coverage:
-<img src="./public/github/unit-tests.png" alt="Code coverage results" width="100%"/>
+<img src="public/github/unit-tests.png" alt="Code coverage results" width="100%"/>
 
 ## 📱 Contact
 
